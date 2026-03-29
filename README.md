@@ -8,7 +8,7 @@ A physical Sonos controller built around a Raspberry Pi Zero 2W and a Waveshare 
 
 | Component | Details |
 |-----------|---------|
-| SBC | Raspberry Pi Zero 2W |
+| SBC | Raspberry Pi Zero 2W, Zero W, 3B/3B+, 4B, or 5 — any model with a 40-pin GPIO header |
 | Display | Waveshare 2.13" Touch e-Paper HAT (or compatible) — 250×122 px, B/W, SPI (EPD) + I2C (GT1151 touch) |
 | Connection | 40-pin header (HAT form factor) |
 
@@ -45,7 +45,7 @@ A physical Sonos controller built around a Raspberry Pi Zero 2W and a Waveshare 
 
 ```bash
 # On the Pi (as the default 'pi' user):
-git clone https://github.com/yourname/sonos-remote-eink.git
+git clone https://github.com/stigf/sonos-remote-eink.git
 cd sonos-remote-eink
 sudo bash install.sh
 sudo reboot

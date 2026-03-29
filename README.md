@@ -79,7 +79,14 @@ sudo apt-get update
 sudo apt-get install -y python3 python3-pip fonts-dejavu-core git avahi-daemon
 ```
 
-### 3. Clone the Waveshare Touch e-Paper HAT library
+### 3. Clone the application
+
+```bash
+git clone https://github.com/stigf/sonos-remote-eink.git
+cd sonos-remote-eink
+```
+
+### 4. Clone the Waveshare Touch e-Paper HAT library
 
 ```bash
 git clone --depth=1 \
@@ -89,20 +96,20 @@ git clone --depth=1 \
 
 The application expects the library at `/home/pi/Touch_e-Paper_HAT/python/TP_lib/`. If you place it elsewhere, update `WAVESHARE_LIB_PATH` in `config.py`. Make sure you clone the **Touch_e-Paper_HAT** repo — not the general e-Paper repo.
 
-### 4. Install Python dependencies
+### 5. Install Python dependencies
 
 ```bash
 sudo pip3 install --break-system-packages soco Pillow smbus2
 ```
 
-### 5. Deploy the application
+### 6. Deploy the application
 
 ```bash
 sudo cp -r . /opt/sonos-remote/
 sudo chown -R pi:pi /opt/sonos-remote/
 ```
 
-### 6. Install the systemd service
+### 7. Install the systemd service
 
 ```bash
 sudo cp /opt/sonos-remote/sonos-remote.service /etc/systemd/system/

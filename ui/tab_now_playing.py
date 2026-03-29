@@ -7,7 +7,7 @@
 #
 # Two visual modes:
 #
-#   IDLE  — title, artist, remaining time centred (full height)
+#   IDLE  — title, artist, total duration centred (full height)
 #   ACTIVE — title, artist, progress bar, controls, volume
 #
 # The menu icon is drawn in active mode when the tab bar is hidden.
@@ -61,7 +61,7 @@ def _draw_menu_icon(draw: ImageDraw) -> None:
 
 
 # ------------------------------------------------------------------
-# Idle layout — title, artist, remaining time (clean, minimal)
+# Idle layout — title, artist, total duration (clean, minimal)
 # ------------------------------------------------------------------
 
 def _draw_idle(img: Image.Image, draw: ImageDraw, snap: AppState,
@@ -83,7 +83,6 @@ def _draw_idle_no_art(draw: ImageDraw, snap: AppState, content_h: int) -> None:
     title_h = widgets._text_h(fonts.TITLE)
     artist_h = widgets._text_h(fonts.REGULAR)
     album_h = widgets._text_h(fonts.SMALL)
-    remaining = max(0, snap.duration_sec - snap.position_sec)
 
     has_artist = bool(snap.track_artist)
     has_album = bool(snap.track_album)
@@ -123,15 +122,15 @@ def _draw_idle_no_art(draw: ImageDraw, snap: AppState, content_h: int) -> None:
                   font=fonts.SMALL, fill=config.BLACK)
         y += album_h
 
-    # Remaining time (centred, with gap)
+    # Total duration (centred, with gap)
     if has_time:
         if snap.duration_sec > 0:
-            rem_str = _fmt_time(remaining)
+            dur_str = _fmt_time(snap.duration_sec)
         else:
-            rem_str = '...'
-        rw = widgets._text_w(rem_str, fonts.TITLE)
-        ry = y + 14
-        draw.text(((W - rw) // 2, ry), rem_str, font=fonts.TITLE, fill=config.BLACK)
+            dur_str = '...'
+        dw = widgets._text_w(dur_str, fonts.TITLE)
+        dy = y + 14
+        draw.text(((W - dw) // 2, dy), dur_str, font=fonts.TITLE, fill=config.BLACK)
 
 
 def _draw_idle_with_art(img: Image.Image, draw: ImageDraw, snap: AppState,
@@ -157,7 +156,6 @@ def _draw_idle_with_art(img: Image.Image, draw: ImageDraw, snap: AppState,
 
     has_artist = bool(snap.track_artist)
     has_album = bool(snap.track_album)
-    remaining = max(0, snap.duration_sec - snap.position_sec)
     has_time = snap.duration_sec > 0 or snap.playback_state == 'PLAYING'
 
     block_h = title_h
@@ -191,14 +189,14 @@ def _draw_idle_with_art(img: Image.Image, draw: ImageDraw, snap: AppState,
                   font=fonts.SMALL, fill=config.BLACK)
         y += album_h
 
-    # Remaining time
+    # Total duration
     if has_time:
         y += 10
         if snap.duration_sec > 0:
-            rem_str = _fmt_time(remaining)
+            dur_str = _fmt_time(snap.duration_sec)
         else:
-            rem_str = '...'
-        draw.text((text_x, y), rem_str, font=fonts.TITLE, fill=config.BLACK)
+            dur_str = '...'
+        draw.text((text_x, y), dur_str, font=fonts.TITLE, fill=config.BLACK)
 
 
 # ------------------------------------------------------------------

@@ -178,9 +178,11 @@ def main():
 
     print('\nNow Playing — Idle:')
 
-    # 5. Idle, no art
-    snap = _base_snap()
+    # 5. Idle, no art (Fela Kuti — long title, no art shown)
+    snap = _fela_snap(zombie_art)
     snap.idle_mode = True
+    snap.show_album_art = False
+    snap.album_art_img = None
     save(tab_now_playing.render(snap), '05_idle_no_art', out_dir)
 
     # 6. Idle, with art (Madvillainy — simple cover)

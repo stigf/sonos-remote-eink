@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonos e-ink Remote — Raspberry Pi touchscreen controller</title>
+<meta name="description" content="Open-source Sonos controller using a Raspberry Pi Zero 2W and a 2.13-inch touch e-ink display. Control playback, browse your queue, group speakers, and show album art — all from a low-power always-on screen.">
+<meta name="keywords" content="Sonos, e-ink, e-paper, Raspberry Pi, Pi Zero, remote control, touchscreen, Waveshare, home automation, music controller, open source">
+<link rel="canonical" href="https://stigf.github.io/sonos-remote-eink/">
+<meta property="og:title" content="Sonos e-ink Remote">
+<meta property="og:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi Zero 2W and a 2.13-inch e-paper display.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stigf.github.io/sonos-remote-eink/">
+<meta property="og:image" content="https://stigf.github.io/sonos-remote-eink/img/06_idle_with_art.png">
+<meta property="og:image:width" content="250">
+<meta property="og:image:height" content="122">
+<meta property="og:image:alt" content="E-ink display showing album art and track info for a Sonos speaker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sonos e-ink Remote">
+<meta name="twitter:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi Zero 2W.">
+<meta name="twitter:image" content="https://stigf.github.io/sonos-remote-eink/img/06_idle_with_art.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "Sonos e-ink Remote",
+  "description": "An open-source Sonos controller using a Raspberry Pi Zero 2W and a 2.13-inch touch e-ink display.",
+  "url": "https://stigf.github.io/sonos-remote-eink/",
+  "codeRepository": "https://github.com/stigf/sonos-remote-eink",
+  "programmingLanguage": "Python",
+  "author": {
+    "@type": "Person",
+    "name": "Stig Faanes"
+  },
+  "license": "https://polyformproject.org/licenses/noncommercial/1.0.0/"
+}
+</script>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>Sonos e-ink Remote</h1>
+    <p class="hero-desc">An always-on touchscreen controller for Sonos, built with a Raspberry Pi Zero 2W and a 2.13" e-ink display.</p>
+    <div class="badges">
+      <span class="badge">Pi Zero 2W</span>
+      <span class="badge">250 &times; 122 px</span>
+      <span class="badge">e-ink touch</span>
+      <span class="badge">Python</span>
+    </div>
+  </header>
+
+  <main>
+  <section>
+    <h2>Features</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Now Playing</h3>
+        <p>See what's playing with track info, progress bar, and transport controls. Optionally show dithered album art.</p>
+      </div>
+      <div class="feature">
+        <h3>Queue &amp; Favourites</h3>
+        <p>Browse your queue and Sonos favourites side by side. Tap to play.</p>
+      </div>
+      <div class="feature">
+        <h3>Speaker Grouping</h3>
+        <p>View all speakers on your network. Tap to switch or group them together.</p>
+      </div>
+      <div class="feature">
+        <h3>WiFi Setup</h3>
+        <p>Type passwords on the built-in keyboard, or use the captive portal from your phone.</p>
+      </div>
+      <div class="feature">
+        <h3>Always On</h3>
+        <p>The e-ink display holds its image with zero power. Only refreshes when something changes.</p>
+      </div>
+      <div class="feature">
+        <h3>Runs on Boot</h3>
+        <p>Install once, reboot, and it just works. Discovers your Sonos speakers automatically.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Screenshots</h2>
+    <p class="screenshots-desc">Rendered at native 250&times;122 resolution &mdash; exactly what the e-ink display shows.</p>
+    <div class="preview-grid">
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/01_active_no_art.png" alt="Now Playing screen with track title, artist, progress bar and transport controls" width="250" height="122"></div>
+        <div class="preview-label">Now Playing</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/02_active_with_art.png" alt="Now Playing with dithered album art thumbnail beside track info" width="250" height="122"></div>
+        <div class="preview-label">Now Playing with album art</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/06_idle_with_art.png" alt="Idle mode with large dithered album art and track info" width="250" height="122"></div>
+        <div class="preview-label">Idle mode</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/07_idle_busy_art.png" alt="Idle mode showing dithered busy album cover" width="250" height="122"></div>
+        <div class="preview-label">Idle mode with busy artwork</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/03_active_art_tab_bar.png" alt="Now Playing with album art and tab navigation at the bottom" width="250" height="122"></div>
+        <div class="preview-label">Tab navigation</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/10_queue.png" alt="Queue and favourites lists side by side" width="250" height="122"></div>
+        <div class="preview-label">Queue &amp; Favourites</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/11_speakers.png" alt="Speaker list with grouping indicators and volume bars" width="250" height="122"></div>
+        <div class="preview-label">Speaker grouping</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/12_wifi_normal.png" alt="WiFi settings with network list and signal strength" width="250" height="122"></div>
+        <div class="preview-label">WiFi settings</div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-img-wrap"><img src="img/16_keyboard_typing.png" alt="On-screen QWERTY keyboard with text input" width="250" height="122"></div>
+        <div class="preview-label">On-screen keyboard</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Hardware</h2>
+    <table class="hw-table" aria-label="Required hardware">
+      <thead><tr><th scope="col">Component</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><td>SBC</td><td>Raspberry Pi Zero 2W, Zero W, 3B/3B+, 4B, or 5 &mdash; any model with a 40-pin GPIO header</td></tr>
+        <tr><td>Display</td><td>2.13" Touch e-Paper HAT (Waveshare or compatible) &mdash; 250&times;122 px, B/W</td></tr>
+        <tr><td>Interface</td><td>SPI (EPD) + I2C (GT1151 touch) via 40-pin header</td></tr>
+        <tr><td>Connection</td><td>HAT form factor &mdash; plugs directly onto the GPIO header</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Get started</h2>
+<pre><code>git clone https://github.com/stigf/sonos-remote-eink.git
+cd sonos-remote-eink
+sudo bash install.sh
+sudo reboot</code></pre>
+    <p class="quickstart-note">The service starts on boot and finds your Sonos speakers automatically.</p>
+    <p class="quickstart-cta">
+      <a class="cta" href="https://github.com/stigf/sonos-remote-eink" rel="noopener">View on GitHub</a>
+    </p>
+  </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Stig Faanes &middot; <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/" rel="noopener">PolyForm Noncommercial 1.0.0</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

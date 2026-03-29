@@ -1,0 +1,24 @@
+[Unit]
+Description=Sonos e-Ink Remote Controller
+After=network-online.target
+Wants=network-online.target
+# Give multicast/mDNS time to settle before Sonos discovery
+After=avahi-daemon.service
+Wants=avahi-daemon.service
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/sonos-remote/main.py
+WorkingDirectory=/opt/sonos-remote
+Restart=on-failure
+RestartSec=10
+User=pi
+Group=pi
+# Needed for GPIO and SPI/I2C access
+SupplementaryGroups=gpio spi i2c
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sonos-remote
+
+[Install]
+WantedBy=multi-user.target

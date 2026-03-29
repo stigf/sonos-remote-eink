@@ -143,6 +143,9 @@ def _draw_idle_with_art(img: Image.Image, draw: ImageDraw, snap: AppState,
     # Centre art vertically
     art_y = max(2, (content_h - art_sz) // 2)
     img.paste(art, (config.ART_X, art_y))
+    draw.rectangle([config.ART_X - 1, art_y - 1,
+                     config.ART_X + art_sz, art_y + art_sz],
+                    outline=config.BLACK)
 
     # Text area to the right of art
     text_x = config.ART_X + art_sz + config.ART_GAP + 2
@@ -214,6 +217,9 @@ def _draw_active(img: Image.Image, draw: ImageDraw, snap: AppState,
         art_sz = config.ART_SIZE
         art = _prepare_art(art_img, art_sz)
         img.paste(art, (config.ART_X, config.ART_Y))
+        draw.rectangle([config.ART_X - 1, config.ART_Y - 1,
+                         config.ART_X + art_sz, config.ART_Y + art_sz],
+                        outline=config.BLACK)
         text_x = config.ART_X + art_sz + config.ART_GAP
 
     # Right edge for title (leave room for menu icon when no tab bar)

@@ -167,14 +167,13 @@ If taps register in the wrong location (e.g. axes are swapped or inverted), adju
 The display is 250×122 px in landscape mode.
 
 ```
-┌──────────────────────────────────────┐  y=0
+┌──────────────────────────────────────┐
+│                                      │  Content area
+│        Content area (250×106)        │  y=0 to y=106
 │                                      │
-│        Content area (250×106)        │
-│                                      │
-│                                      │  y=106
-├─────────┬────────┬────────┬─────────┤
-│  Play   │ Queue  │ Spkrs  │  Setup  │  y=106–122 (tab bar)
-└─────────┴────────┴────────┴─────────┘  y=122
+├──────────────────────────────────────┤
+│   Play     Queue     Spkrs    Setup  │  Tab bar
+└──────────────────────────────────────┘  y=106 to y=122
 ```
 
 ### Tab 0 — Now Playing

@@ -147,6 +147,8 @@ User preferences are stored in `/opt/sonos-remote/settings.json` and persist acr
 
 Album art can be toggled from the Settings tab via the **Art:ON / Art:OFF** button. The setting is saved immediately to disk.
 
+Shuffle and repeat are also toggled from the Settings tab (**Shfl:ON/OFF**, **Rpt:ON/OFF**). These control the Sonos play mode directly and are not persisted locally — they are read from the speaker on each poll.
+
 ### Touch coordinate calibration
 
 The GT1151 reports coordinates in the display panel's native **portrait** orientation. The driver remaps them to landscape with:
@@ -214,7 +216,7 @@ A subtle menu icon (⋮) in the top-right corner opens the tab bar. The tab bar 
 | ...           |   ...                 |
 ```
 
-Tap a favourite to replace the queue and start playing it. Tap a queue item to jump to that position. Scroll by tapping near the top or bottom of each pane.
+Tap a favourite to replace the queue and start playing it. Tap a queue item to jump to that position. When a list is longer than the visible area, ▲/▼ scroll buttons appear at the right edge.
 
 ### Tab 2 — Speakers
 

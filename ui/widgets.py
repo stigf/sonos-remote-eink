@@ -144,6 +144,66 @@ def draw_list_row(draw: ImageDraw, x: int, y: int, w: int, h: int,
 
 
 # ------------------------------------------------------------------
+# Scroll indicators
+# ------------------------------------------------------------------
+
+# Width reserved at the right edge of scrollable lists for scroll arrows.
+# Text truncation should subtract this when the list is scrollable.
+SCROLL_W = 14
+
+def draw_scroll_arrows(draw: ImageDraw, x: int, y_top: int,
+                       y_bottom: int, w: int,
+                       can_up: bool, can_down: bool) -> None:
+    """Draw up/down scroll arrows at the right edge of a list area.
+
+    x, w:       the full pane position and width
+    y_top:      y of the first row
+    y_bottom:   y of the bottom of the last row
+    """
+    if not can_up and not can_down:
+        return
+
+    ax = x + w - SCROLL_W       # left edge of scroll column
+    arrow_w = SCROLL_W - 2      # arrow box width (leave 2px right margin)
+
+    if can_up:
+        # Small box with ▲ at top of list
+        bx = ax + 1
+        by = y_top
+        bh = 12
+        draw.rectangle([bx, by, bx + arrow_w - 1, by + bh - 1],
+                       fill=config.WHITE, outline=config.BLACK)
+        # Triangle pointing up
+        cx = bx + arrow_w // 2
+        cy = by + bh // 2
+        draw.polygon([(cx - 3, cy + 2), (cx + 3, cy + 2), (cx, cy - 2)],
+                     fill=config.BLACK)
+
+    if can_down:
+        # Small box with ▼ at bottom of list
+        bx = ax + 1
+        bh = 12
+        by = y_bottom - bh
+        draw.rectangle([bx, by, bx + arrow_w - 1, by + bh - 1],
+                       fill=config.WHITE, outline=config.BLACK)
+        # Triangle pointing down
+        cx = bx + arrow_w // 2
+        cy = by + bh // 2
+        draw.polygon([(cx - 3, cy - 2), (cx + 3, cy - 2), (cx, cy + 2)],
+                     fill=config.BLACK)
+
+
+def scroll_hit_regions(x: int, y_top: int, y_bottom: int,
+                       w: int) -> tuple:
+    """Return (up_rect, down_rect) hit regions matching draw_scroll_arrows."""
+    ax = x + w - SCROLL_W + 1
+    bh = 12
+    up_rect   = (ax, y_top, ax + SCROLL_W - 3, y_top + bh - 1)
+    down_rect = (ax, y_bottom - bh, ax + SCROLL_W - 3, y_bottom - 1)
+    return up_rect, down_rect
+
+
+# ------------------------------------------------------------------
 # Icons (drawn with PIL primitives — no image files needed)
 # ------------------------------------------------------------------
 

@@ -90,6 +90,10 @@ def _draw_normal(draw: ImageDraw, snap: AppState) -> None:
     # ---- Network list ----
     networks = snap.wifi_networks
     scroll   = max(0, min(snap.wifi_scroll, max(0, len(networks) - _VISIBLE_ROWS)))
+    scrollable = len(networks) > _VISIBLE_ROWS
+
+    # Reserve width for scroll arrows when list is scrollable
+    row_w = W - widgets.SCROLL_W if scrollable else W
 
     for i in range(_VISIBLE_ROWS):
         idx = i + scroll
@@ -108,25 +112,24 @@ def _draw_normal(draw: ImageDraw, snap: AppState) -> None:
         sig_str = f'{net.signal}%{lock}'
         sig_w = widgets._text_w(sig_str, fonts.TINY)
 
-        name_max = W - sig_w - 8
+        name_max = row_w - sig_w - 8
         label = prefix + widgets.truncate(net.ssid, font, name_max - widgets._text_w(prefix, font))
 
-        widgets.draw_list_row(draw, 0, y, W, _ROW_H, '',
+        widgets.draw_list_row(draw, 0, y, row_w, _ROW_H, '',
                               inverted=is_active)
         fg = config.WHITE if is_active else config.BLACK
         draw.text((2, y + (_ROW_H - widgets._text_h(font)) // 2),
                   label, font=font, fill=fg)
-        draw.text((W - sig_w - 2, y + (_ROW_H - widgets._text_h(fonts.TINY)) // 2),
+        draw.text((row_w - sig_w - 2, y + (_ROW_H - widgets._text_h(fonts.TINY)) // 2),
                   sig_str, font=fonts.TINY, fill=fg)
 
-    # Scroll hints
-    if scroll > 0:
-        draw.polygon([(W - 8, _LIST_TOP + 1), (W - 4, _LIST_TOP + 1),
-                       (W - 6, _LIST_TOP - 2)], fill=config.BLACK)
-    if scroll + _VISIBLE_ROWS < len(networks):
-        bottom = _LIST_TOP + _VISIBLE_ROWS * _ROW_H - 1
-        draw.polygon([(W - 8, bottom), (W - 4, bottom),
-                       (W - 6, bottom + 3)], fill=config.BLACK)
+    # Scroll arrows
+    if scrollable:
+        list_bottom = _LIST_TOP + _VISIBLE_ROWS * _ROW_H
+        widgets.draw_scroll_arrows(
+            draw, 0, _LIST_TOP, list_bottom, W,
+            can_up=(scroll > 0),
+            can_down=(scroll + _VISIBLE_ROWS < len(networks)))
 
     # ---- Separator ----
     draw.line([0, 69, W - 1, 69], fill=config.BLACK)
@@ -222,17 +225,23 @@ def _build_regions(snap: AppState) -> None:
         REGIONS['wifi_scan']     = (ax0, _ACTION_Y, ax0 + action_w - 1, _ACTION_Y + _BTN_H)
         REGIONS['wifi_ap_start'] = (ax1, _ACTION_Y, W - 2, _ACTION_Y + _BTN_H)
 
-        # Network rows
+        # Network rows (narrower when scrollable so arrows get own zone)
         scroll = max(0, min(snap.wifi_scroll,
                             max(0, len(snap.wifi_networks) - _VISIBLE_ROWS)))
+        scrollable = len(snap.wifi_networks) > _VISIBLE_ROWS
+        row_hit_w = W - widgets.SCROLL_W if scrollable else W
+
         for i in range(min(_VISIBLE_ROWS, len(snap.wifi_networks) - scroll)):
             idx = i + scroll
             y = _LIST_TOP + i * _ROW_H
-            REGIONS[f'wifi_net_{idx}'] = (0, y, W - 1, y + _ROW_H - 1)
+            REGIONS[f'wifi_net_{idx}'] = (0, y, row_hit_w - 1, y + _ROW_H - 1)
 
-        # Scroll zones
-        if len(snap.wifi_networks) > _VISIBLE_ROWS:
-            REGIONS['wifi_scroll_up'] = (0, _LIST_TOP, W - 1,
-                                          _LIST_TOP + _ROW_H - 1)
-            bottom = _LIST_TOP + _VISIBLE_ROWS * _ROW_H
-            REGIONS['wifi_scroll_down'] = (0, bottom - _ROW_H, W - 1, bottom - 1)
+        # Scroll arrow hit regions (non-overlapping with rows)
+        if scrollable:
+            list_bottom = _LIST_TOP + _VISIBLE_ROWS * _ROW_H
+            up, down = widgets.scroll_hit_regions(
+                0, _LIST_TOP, list_bottom, W)
+            if scroll > 0:
+                REGIONS['wifi_scroll_up'] = up
+            if scroll + _VISIBLE_ROWS < len(snap.wifi_networks):
+                REGIONS['wifi_scroll_down'] = down

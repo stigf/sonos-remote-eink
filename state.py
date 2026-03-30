@@ -69,6 +69,7 @@ class AppState:
     # Scroll offsets (list row index of topmost visible item)
     fav_scroll: int = 0
     queue_scroll: int = 0
+    speaker_scroll: int = 0
 
     # Error display (None = no error)
     sonos_error: Optional[str] = None

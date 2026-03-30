@@ -236,6 +236,8 @@ Tap a favourite to replace the queue and start playing it. Tap a queue item to j
 - Tap the **coordinator** row to switch the active speaker target
 - Tap a **non-coordinator** speaker to toggle its group membership (join/unjoin the coordinator's zone group)
 
+When there are more than 4 speakers, ▲/▼ scroll buttons appear at the right edge.
+
 ### Tab 3 — Settings
 
 Normal mode:

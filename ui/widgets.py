@@ -149,7 +149,10 @@ def draw_list_row(draw: ImageDraw, x: int, y: int, w: int, h: int,
 
 # Width reserved at the right edge of scrollable lists for scroll arrows.
 # Text truncation should subtract this when the list is scrollable.
-SCROLL_W = 14
+SCROLL_W = 13
+
+_ARROW_W = 11   # odd width → triangle centres exactly
+_ARROW_H = 11   # odd height → triangle centres exactly
 
 def draw_scroll_arrows(draw: ImageDraw, x: int, y_top: int,
                        y_bottom: int, w: int,
@@ -163,43 +166,35 @@ def draw_scroll_arrows(draw: ImageDraw, x: int, y_top: int,
     if not can_up and not can_down:
         return
 
-    ax = x + w - SCROLL_W       # left edge of scroll column
-    arrow_w = SCROLL_W - 2      # arrow box width (leave 2px right margin)
+    bx = x + w - SCROLL_W + 1  # 1px left margin in column
 
     if can_up:
-        # Small box with ▲ at top of list
-        bx = ax + 1
         by = y_top
-        bh = 12
-        draw.rectangle([bx, by, bx + arrow_w - 1, by + bh - 1],
+        draw.rectangle([bx, by, bx + _ARROW_W - 1, by + _ARROW_H - 1],
                        fill=config.WHITE, outline=config.BLACK)
-        # Triangle pointing up
-        cx = bx + arrow_w // 2
-        cy = by + bh // 2
-        draw.polygon([(cx - 3, cy + 2), (cx + 3, cy + 2), (cx, cy - 2)],
+        # Triangle pointing up — centred in odd×odd box
+        cx = bx + _ARROW_W // 2
+        cy = by + _ARROW_H // 2
+        draw.polygon([(cx - 2, cy + 1), (cx + 2, cy + 1), (cx, cy - 2)],
                      fill=config.BLACK)
 
     if can_down:
-        # Small box with ▼ at bottom of list
-        bx = ax + 1
-        bh = 12
-        by = y_bottom - bh
-        draw.rectangle([bx, by, bx + arrow_w - 1, by + bh - 1],
+        by = y_bottom - _ARROW_H
+        draw.rectangle([bx, by, bx + _ARROW_W - 1, by + _ARROW_H - 1],
                        fill=config.WHITE, outline=config.BLACK)
-        # Triangle pointing down
-        cx = bx + arrow_w // 2
-        cy = by + bh // 2
-        draw.polygon([(cx - 3, cy - 2), (cx + 3, cy - 2), (cx, cy + 2)],
+        # Triangle pointing down — centred in odd×odd box
+        cx = bx + _ARROW_W // 2
+        cy = by + _ARROW_H // 2
+        draw.polygon([(cx - 2, cy - 1), (cx + 2, cy - 1), (cx, cy + 2)],
                      fill=config.BLACK)
 
 
 def scroll_hit_regions(x: int, y_top: int, y_bottom: int,
                        w: int) -> tuple:
     """Return (up_rect, down_rect) hit regions matching draw_scroll_arrows."""
-    ax = x + w - SCROLL_W + 1
-    bh = 12
-    up_rect   = (ax, y_top, ax + SCROLL_W - 3, y_top + bh - 1)
-    down_rect = (ax, y_bottom - bh, ax + SCROLL_W - 3, y_bottom - 1)
+    bx = x + w - SCROLL_W + 1
+    up_rect   = (bx, y_top, bx + _ARROW_W - 1, y_top + _ARROW_H - 1)
+    down_rect = (bx, y_bottom - _ARROW_H, bx + _ARROW_W - 1, y_bottom - 1)
     return up_rect, down_rect
 
 

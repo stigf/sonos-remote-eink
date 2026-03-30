@@ -93,7 +93,7 @@ def main():
         settings.set('show_album_art', new_val)
         def _update(s):
             s.show_album_art = new_val
-            # Clear cached art so toggling ON triggers a fresh fetch
+            # Clear cached art when toggling OFF
             if not new_val:
                 s.album_art_img = None
             s.needs_full_refresh = True
@@ -242,7 +242,7 @@ def _dispatch_touch(x: int, y: int, snap, bus, store) -> None:
     elif snap.active_tab == 1:
         _hit_queue(x, y, snap, bus, store)
     elif snap.active_tab == 2:
-        _hit_speakers(x, y, snap, bus)
+        _hit_speakers(x, y, snap, bus, store)
     elif snap.active_tab == 3:
         _hit_wifi(x, y, snap, bus, store)
 
@@ -292,11 +292,21 @@ def _hit_queue(x: int, y: int, snap, bus, store) -> None:
         return
 
 
-def _hit_speakers(x: int, y: int, snap, bus) -> None:
+def _hit_speakers(x: int, y: int, snap, bus, store) -> None:
     for key, (x0, y0, x1, y1) in tab_speakers.REGIONS.items():
-        if x0 <= x <= x1 and y0 <= y <= y1 and key.startswith('speaker_'):
+        if not (x0 <= x <= x1 and y0 <= y <= y1):
+            continue
+        if key == 'speaker_scroll_up':
+            store.update(lambda s: setattr(s, 'speaker_scroll',
+                         max(0, s.speaker_scroll - 1)))
+            bus.publish(evt.EVT_STATE_CHANGED)
+        elif key == 'speaker_scroll_down':
+            store.update(lambda s: setattr(s, 'speaker_scroll',
+                         min(s.speaker_scroll + 1,
+                             max(0, len(s.speakers) - tab_speakers.VISIBLE))))
+            bus.publish(evt.EVT_STATE_CHANGED)
+        elif key.startswith('speaker_'):
             uid = key[len('speaker_'):]
-            # Find speaker for this uid
             for sp in snap.speakers:
                 if sp.uid == uid:
                     if sp.is_coordinator:
@@ -305,7 +315,8 @@ def _hit_speakers(x: int, y: int, snap, bus) -> None:
                     else:
                         # Tapping non-coordinator toggles group membership
                         bus.publish(evt.EVT_GROUP_TOGGLE, sp.ip)
-                    return
+                    break
+        return
 
 
 def _hit_wifi(x: int, y: int, snap, bus, store) -> None:
@@ -352,7 +363,7 @@ def _hit_wifi(x: int, y: int, snap, bus, store) -> None:
         elif key == 'wifi_scroll_down':
             store.update(lambda s: setattr(s, 'wifi_scroll',
                          min(s.wifi_scroll + 1,
-                             max(0, len(s.wifi_networks) - tab_wifi._VISIBLE_ROWS))))
+                             max(0, len(s.wifi_networks) - tab_wifi.VISIBLE_ROWS))))
             bus.publish(evt.EVT_STATE_CHANGED)
         return
 

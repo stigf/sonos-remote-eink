@@ -6,9 +6,8 @@ DISPLAY_H = 122         # landscape height (pixels)
 TAB_BAR_H = 16          # tab bar at bottom
 CONTENT_H = DISPLAY_H - TAB_BAR_H  # 106px usable content height
 
-# Physical panel native dimensions (portrait orientation of the EPD)
+# Physical panel native dimension (used for touch coordinate remapping)
 DISPLAY_NATIVE_SHORT = 122   # portrait x-axis
-DISPLAY_NATIVE_LONG  = 250   # portrait y-axis
 
 # PIL color values for mode '1'
 WHITE = 255
@@ -51,7 +50,6 @@ TAB_W      = DISPLAY_W // TAB_COUNT   # 62 px each (last tab gets remainder)
 # --- WiFi ---
 WIFI_SCAN_INTERVAL     = 15.0     # seconds between background scans
 WIFI_ROW_H             = 15       # height of each network row
-WIFI_VISIBLE_ROWS      = 4        # network rows visible at once
 WIFI_HOTSPOT_SSID      = 'SonosRemote-Setup'
 WIFI_HOTSPOT_PASSWORD   = 'sonossetup'
 WIFI_PORTAL_PORT       = 80       # captive portal HTTP port
@@ -82,11 +80,11 @@ NP_VOL_Y      = CONTENT_H   # volume sits at bottom — tab bar replaces it
 NP_VOL_H      = TAB_BAR_H   # same height as tab bar (16px)
 
 # Control button centres (x) and half-widths — evenly spaced across 250px
-NP_BTN_PREV   = (25,  21, 0)   # (x_center, half_w, unused)
-NP_BTN_PLAY   = (75,  21, 0)
-NP_BTN_NEXT   = (125, 21, 0)
-NP_BTN_VOLD   = (175, 21, 0)
-NP_BTN_VOLU   = (225, 21, 0)
+NP_BTN_PREV   = (25,  21)   # (x_center, half_w)
+NP_BTN_PLAY   = (75,  21)
+NP_BTN_NEXT   = (125, 21)
+NP_BTN_VOLD   = (175, 21)
+NP_BTN_VOLU   = (225, 21)
 NP_BTN_HALF_H = 12   # all control buttons share this half-height
 
 # Menu icon (top-right of Now Playing, opens tab bar)

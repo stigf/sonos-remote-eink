@@ -56,7 +56,7 @@ def render(snap: AppState) -> Image.Image:
 def _draw_menu_icon(draw: ImageDraw) -> None:
     # Small vertical dots (⋮) — subtle, doesn't compete with content
     cx = config.MENU_ICON_X + config.MENU_ICON_W // 2
-    for dy in [4, 8, 12]:
+    for dy in [3, 7, 11]:
         draw.rectangle([cx, dy, cx + 1, dy + 1], fill=config.BLACK)
 
 

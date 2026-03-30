@@ -222,10 +222,23 @@ def main():
     snap.active_tab = 1
     _save(tab_queue.render(snap), '10_queue', out_dir)
 
-    # 11. Speakers
+    # 11a. Speakers (4 — no scroll)
     snap = _base_snap()
     snap.active_tab = 2
-    _save(tab_speakers.render(snap), '11_speakers', out_dir)
+    _save(tab_speakers.render(snap), '11a_speakers', out_dir)
+
+    # 11b. Speakers (6 — with scroll arrows)
+    snap = _base_snap()
+    snap.active_tab = 2
+    snap.speakers = [
+        SpeakerInfo(uid='a1', name='Living Room', ip='192.168.1.10', volume=42, is_coordinator=True, is_grouped=True),
+        SpeakerInfo(uid='a2', name='Kitchen', ip='192.168.1.11', volume=35, is_coordinator=False, is_grouped=True),
+        SpeakerInfo(uid='a3', name='Bedroom', ip='192.168.1.12', volume=20, is_coordinator=False, is_grouped=False),
+        SpeakerInfo(uid='a4', name='Office Speaker Pro Max', ip='192.168.1.13', volume=55, is_coordinator=False, is_grouped=False),
+        SpeakerInfo(uid='a5', name='Bathroom', ip='192.168.1.14', volume=30, is_coordinator=False, is_grouped=True),
+        SpeakerInfo(uid='a6', name='Garage', ip='192.168.1.15', volume=10, is_coordinator=False, is_grouped=False),
+    ]
+    _save(tab_speakers.render(snap), '11b_speakers_scroll', out_dir)
 
     # 12. Settings (all toggles off)
     snap = _base_snap()

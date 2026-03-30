@@ -49,8 +49,3 @@ def set(key: str, value) -> None:
     data = _load()
     data[key] = value
     _save(data)
-
-
-def get_all() -> dict:
-    """Return all settings as a dict."""
-    return _load()

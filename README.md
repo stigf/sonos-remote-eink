@@ -159,43 +159,76 @@ If taps register in the wrong location (e.g. axes are swapped or inverted), adju
 
 ## UI layout
 
-The display is 250 x 122 px in landscape mode. The bottom 16 px are shared between the tab bar and the volume indicator — only one is shown at a time.
+The display is 250 x 122 px in landscape mode.
 
 ```
-+--------------------------------------+
-|                                      |  Content area
-|          Content area                |  250 x 106 px
-|                                      |
-+--------------------------------------+
-|   Play     Queue     Spkrs    Setup  |  Tab bar (16 px)
-+--------------------------------------+
+┌──────────────────────────────────────┐
+│                                      │
+│        Content area (250x106)        │
+│                                      │
+├──────────────────────────────────────┤
+│   Play     Queue     Spkrs    Setup  │
+└──────────────────────────────────────┘
 ```
 
-A menu icon in the top-right corner of the Now Playing tab opens the tab bar. Tap the Play tab to hide it and show the volume bar instead.
+The bottom 16 px are shared between the tab bar and the volume indicator — only one is shown at a time. A menu icon in the top-right corner of the Now Playing tab opens the tab bar. Tap the Play tab to hide it and show the volume bar instead.
 
 ### Tab 0 — Now Playing
 
-Displays track title, artist, album, a progress bar, and transport controls (prev / play-pause / next / vol down / vol up). When album art is enabled, a 48 x 48 dithered thumbnail appears alongside the track info.
+```
+Title (bold, truncated)          ⋮
+Artist
+Album (smaller font)
+██████████░░░░░░░░░░░░░░░░░░░░░░░
+1:18 / 2:10                  0:52
+ [|◄]  [||]  [►|]  [ - ]  [ + ]
+VOL ████████████░░░░░░░░░░░░░░ 42
+```
 
-Idle mode shows a simplified display with no controls and no menu icon. With album art enabled, a larger 96 x 96 image is shown on the left with track info beside it. Without art, track info is centred.
+Track info, progress bar, and transport controls. Last row shows volume when the tab bar is hidden. When album art is enabled, a 48x48 dithered thumbnail appears top-left, pushing track info to the right.
+
+**Idle mode** shows a simplified layout — no controls, no menu icon. With art enabled, a larger 96x96 image is shown with track info beside it. Without art, track info is centred.
 
 ### Tab 1 — Queue
 
-Favourites and queue are shown side by side. Tap a favourite to start playing it. Tap a queue item to jump to that track. When either list is longer than the visible area, scroll buttons appear at the right edge.
+```
+Favs (95px)     Queue (154px)
+────────────    ──────────────
+Radio 1         > 3. Current
+My Playlist       4. Next Song
+Jazz FM           5. Another
+...               ...
+```
+
+Favourites and queue side by side. Tap a favourite to start playing it. Tap a queue item to jump to that track. When either list overflows, ▲/▼ scroll buttons appear at the right edge.
 
 ### Tab 2 — Speakers
 
-Lists all speakers on the network with grouping indicators and volume bars:
+```
+■ Living Room    ████████░░  42
+● Kitchen        ██████░░░░  35
+○ Bedroom        ████░░░░░░  20
+○ Office         ████████░░  55
+```
 
-- **■** Coordinator — the active/master speaker controlling playback
-- **●** Grouped — member of the coordinator's zone group
+- **■** Coordinator — the active/master speaker
+- **●** Grouped — member of the coordinator's group
 - **○** Ungrouped — standalone speaker
 
-Tap the coordinator row to switch the active speaker. Tap a non-coordinator to toggle its group membership. When there are more than 4 speakers, scroll buttons appear at the right edge.
+Tap the coordinator to switch active speaker. Tap a non-coordinator to toggle group membership. When there are more than 4 speakers, ▲/▼ scroll buttons appear at the right edge.
 
 ### Tab 3 — Settings
 
-Top rows show toggle buttons for album art, shuffle, and repeat. Below that is a list of WiFi networks with signal strength. Tap a secured network to open the on-screen keyboard and enter a password. Open networks connect immediately.
+```
+[Art:OFF] [Shfl:OFF] [Rpt:OFF]
+[Scan]               [Setup AP]
+────────────────────────────────
+* HomeNetwork        92%
+  Neighbor-5G        78%
+  CoffeeShop         45%
+```
+
+Toggle buttons for album art, shuffle, and repeat. Below that, a list of WiFi networks. Tap a secured network to open the on-screen keyboard and enter a password. Open networks connect immediately.
 
 **Fallback: captive portal.** Tap **Setup AP** to start a WiFi hotspot (`SonosRemote-Setup`). Connect a phone to it, open `http://10.42.0.1`, and enter credentials in a web form. The hotspot SSID and password are configurable in `config.py`.
 

@@ -50,7 +50,7 @@ def render(snap: AppState) -> Image.Image:
 
 
 # ------------------------------------------------------------------
-# Menu icon (hamburger ≡)
+# Menu icon (vertical dots ⋮)
 # ------------------------------------------------------------------
 
 def _draw_menu_icon(draw: ImageDraw) -> None:

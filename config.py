@@ -44,7 +44,7 @@ IDLE_TIMEOUT_SEC   = 60         # switch to idle mode (track-change-only updates
 FULL_REFRESH_EVERY = 10
 
 # --- Tabs ---
-TAB_NAMES  = ['Play', 'Queue', 'Spkrs', 'WiFi']
+TAB_NAMES  = ['Play', 'Queue', 'Spkrs', 'Setup']
 TAB_COUNT  = len(TAB_NAMES)
 TAB_W      = DISPLAY_W // TAB_COUNT   # 62 px each (last tab gets remainder)
 

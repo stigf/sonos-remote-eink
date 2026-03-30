@@ -1,7 +1,8 @@
-# ui/tab_wifi.py — WiFi settings tab
+# ui/tab_wifi.py — Settings tab (WiFi, art, shuffle, repeat)
 #
 # Two modes:
-#   Normal  — shows current connection, scanned networks, [Scan] and [Setup] buttons
+#   Normal  — shows current connection, scanned networks, toggle buttons,
+#             and WiFi action buttons
 #   AP mode — shows hotspot instructions (connect phone, open portal URL)
 #
 # Layout (content area 250×106):
@@ -10,9 +11,10 @@
 #     y=0   Status line: "Connected: MyNetwork  (IP)"  or  "Not connected"
 #     y=14  Signal bar
 #     y=22  ──── separator ────
-#     y=24  Network list rows (4 visible, 15px each)
-#     y=84  ──── separator ────
-#     y=86  [Scan]   [Setup AP]
+#     y=24  Network list rows (3 visible, 15px each)
+#     y=69  ──── separator ────
+#     y=71  [Art:ON]  [Shfl:ON]  [Rpt:ON]   ← toggle buttons
+#     y=88  [Scan]    [Setup AP]             ← WiFi action buttons
 #
 #   AP MODE:
 #     y=0   "Connect phone to WiFi:"
@@ -34,7 +36,9 @@ REGIONS = {}
 
 _ROW_H = config.WIFI_ROW_H
 _LIST_TOP = 24
-_BTN_Y = 88
+_VISIBLE_ROWS = 3        # reduced from 4 to fit toggle row
+_TOGGLE_Y = 71            # toggle buttons row (Art, Shuffle, Repeat)
+_ACTION_Y = 88            # WiFi action buttons row (Scan, Setup AP)
 _BTN_H = 16
 
 
@@ -85,10 +89,9 @@ def _draw_normal(draw: ImageDraw, snap: AppState) -> None:
 
     # ---- Network list ----
     networks = snap.wifi_networks
-    visible  = config.WIFI_VISIBLE_ROWS
-    scroll   = max(0, min(snap.wifi_scroll, max(0, len(networks) - visible)))
+    scroll   = max(0, min(snap.wifi_scroll, max(0, len(networks) - _VISIBLE_ROWS)))
 
-    for i in range(visible):
+    for i in range(_VISIBLE_ROWS):
         idx = i + scroll
         y = _LIST_TOP + i * _ROW_H
         if idx >= len(networks):
@@ -120,30 +123,44 @@ def _draw_normal(draw: ImageDraw, snap: AppState) -> None:
     if scroll > 0:
         draw.polygon([(W - 8, _LIST_TOP + 1), (W - 4, _LIST_TOP + 1),
                        (W - 6, _LIST_TOP - 2)], fill=config.BLACK)
-    if scroll + visible < len(networks):
-        bottom = _LIST_TOP + visible * _ROW_H - 1
+    if scroll + _VISIBLE_ROWS < len(networks):
+        bottom = _LIST_TOP + _VISIBLE_ROWS * _ROW_H - 1
         draw.polygon([(W - 8, bottom), (W - 4, bottom),
                        (W - 6, bottom + 3)], fill=config.BLACK)
 
     # ---- Separator ----
-    draw.line([0, 85, W - 1, 85], fill=config.BLACK)
+    draw.line([0, 69, W - 1, 69], fill=config.BLACK)
 
-    # ---- Buttons (evenly spaced across width) ----
+    # ---- Toggle buttons row (Art, Shuffle, Repeat) ----
     btn_gap = 3
-    btn_w = (W - 4 - btn_gap * 2) // 3   # ~81px each
-    btn_x0 = 2
-    btn_x1 = btn_x0 + btn_w + btn_gap
-    btn_x2 = btn_x1 + btn_w + btn_gap
-
-    widgets.draw_button(draw, btn_x0, _BTN_Y, btn_w, _BTN_H,
-                        'Scan', font=fonts.SMALL)
+    toggle_w = (W - 4 - btn_gap * 2) // 3
+    tx0 = 2
+    tx1 = tx0 + toggle_w + btn_gap
+    tx2 = tx1 + toggle_w + btn_gap
 
     art_label = 'Art:ON' if snap.show_album_art else 'Art:OFF'
-    widgets.draw_button(draw, btn_x1, _BTN_Y, btn_w, _BTN_H,
+    widgets.draw_button(draw, tx0, _TOGGLE_Y, toggle_w, _BTN_H,
                         art_label, font=fonts.SMALL,
                         inverted=snap.show_album_art)
 
-    widgets.draw_button(draw, btn_x2, _BTN_Y, W - btn_x2 - 2, _BTN_H,
+    shfl_label = 'Shfl:ON' if snap.shuffle else 'Shfl:OFF'
+    widgets.draw_button(draw, tx1, _TOGGLE_Y, toggle_w, _BTN_H,
+                        shfl_label, font=fonts.SMALL,
+                        inverted=snap.shuffle)
+
+    rpt_label = 'Rpt:ON' if snap.repeat else 'Rpt:OFF'
+    widgets.draw_button(draw, tx2, _TOGGLE_Y, W - tx2 - 2, _BTN_H,
+                        rpt_label, font=fonts.SMALL,
+                        inverted=snap.repeat)
+
+    # ---- WiFi action buttons row (Scan, Setup AP) ----
+    action_w = (W - 4 - btn_gap) // 2
+    ax0 = 2
+    ax1 = ax0 + action_w + btn_gap
+
+    widgets.draw_button(draw, ax0, _ACTION_Y, action_w, _BTN_H,
+                        'Scan', font=fonts.SMALL)
+    widgets.draw_button(draw, ax1, _ACTION_Y, W - ax1 - 2, _BTN_H,
                         'Setup AP', font=fonts.SMALL)
 
 
@@ -172,7 +189,7 @@ def _draw_ap_mode(draw: ImageDraw, snap: AppState) -> None:
                   font=fonts.TINY, fill=config.BLACK)
 
     # Stop button
-    widgets.draw_button(draw, W - 72, _BTN_Y, 70, _BTN_H, 'Stop AP',
+    widgets.draw_button(draw, W - 72, _ACTION_Y, 70, _BTN_H, 'Stop AP',
                         font=fonts.SMALL, inverted=True)
 
 
@@ -185,29 +202,37 @@ def _build_regions(snap: AppState) -> None:
     W = config.DISPLAY_W
 
     if snap.wifi_ap_mode:
-        REGIONS['wifi_ap_stop'] = (W - 72, _BTN_Y, W - 2, _BTN_Y + _BTN_H)
+        REGIONS['wifi_ap_stop'] = (W - 72, _ACTION_Y, W - 2, _ACTION_Y + _BTN_H)
     else:
         btn_gap = 3
-        btn_w = (W - 4 - btn_gap * 2) // 3
-        btn_x0 = 2
-        btn_x1 = btn_x0 + btn_w + btn_gap
-        btn_x2 = btn_x1 + btn_w + btn_gap
-        REGIONS['wifi_scan'] = (btn_x0, _BTN_Y, btn_x0 + btn_w - 1, _BTN_Y + _BTN_H)
-        REGIONS['toggle_art'] = (btn_x1, _BTN_Y, btn_x1 + btn_w - 1, _BTN_Y + _BTN_H)
-        REGIONS['wifi_ap_start'] = (btn_x2, _BTN_Y, W - 2, _BTN_Y + _BTN_H)
 
-        # Network rows (tap to see info — actual connection is via portal)
-        visible = config.WIFI_VISIBLE_ROWS
-        scroll  = max(0, min(snap.wifi_scroll,
-                             max(0, len(snap.wifi_networks) - visible)))
-        for i in range(min(visible, len(snap.wifi_networks) - scroll)):
+        # Toggle row
+        toggle_w = (W - 4 - btn_gap * 2) // 3
+        tx0 = 2
+        tx1 = tx0 + toggle_w + btn_gap
+        tx2 = tx1 + toggle_w + btn_gap
+        REGIONS['toggle_art']     = (tx0, _TOGGLE_Y, tx0 + toggle_w - 1, _TOGGLE_Y + _BTN_H)
+        REGIONS['toggle_shuffle'] = (tx1, _TOGGLE_Y, tx1 + toggle_w - 1, _TOGGLE_Y + _BTN_H)
+        REGIONS['toggle_repeat']  = (tx2, _TOGGLE_Y, W - 2, _TOGGLE_Y + _BTN_H)
+
+        # Action row
+        action_w = (W - 4 - btn_gap) // 2
+        ax0 = 2
+        ax1 = ax0 + action_w + btn_gap
+        REGIONS['wifi_scan']     = (ax0, _ACTION_Y, ax0 + action_w - 1, _ACTION_Y + _BTN_H)
+        REGIONS['wifi_ap_start'] = (ax1, _ACTION_Y, W - 2, _ACTION_Y + _BTN_H)
+
+        # Network rows
+        scroll = max(0, min(snap.wifi_scroll,
+                            max(0, len(snap.wifi_networks) - _VISIBLE_ROWS)))
+        for i in range(min(_VISIBLE_ROWS, len(snap.wifi_networks) - scroll)):
             idx = i + scroll
             y = _LIST_TOP + i * _ROW_H
             REGIONS[f'wifi_net_{idx}'] = (0, y, W - 1, y + _ROW_H - 1)
 
         # Scroll zones
-        if len(snap.wifi_networks) > visible:
+        if len(snap.wifi_networks) > _VISIBLE_ROWS:
             REGIONS['wifi_scroll_up'] = (0, _LIST_TOP, W - 1,
                                           _LIST_TOP + _ROW_H - 1)
-            bottom = _LIST_TOP + visible * _ROW_H
+            bottom = _LIST_TOP + _VISIBLE_ROWS * _ROW_H
             REGIONS['wifi_scroll_down'] = (0, bottom - _ROW_H, W - 1, bottom - 1)

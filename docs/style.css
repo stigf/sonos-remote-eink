@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light dark;
   --bg: #fafaf8;
   --fg: #1a1a1a;
   --muted: #666;
@@ -117,7 +118,6 @@ h2 {
   height: auto;
   image-rendering: crisp-edges;
   image-rendering: pixelated;
-  border: 1px solid var(--border);
 }
 .preview-label {
   padding: 10px 14px;

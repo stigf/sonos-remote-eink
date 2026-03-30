@@ -120,6 +120,43 @@ def get_track_info(device) -> Optional[dict]:
 
 
 # ------------------------------------------------------------------
+# Play mode (shuffle / repeat)
+# ------------------------------------------------------------------
+
+def get_play_mode(device) -> Optional[dict]:
+    """Return {'shuffle': bool, 'repeat': bool} from device play mode.
+
+    SoCo play_mode values: NORMAL, SHUFFLE, REPEAT_ALL, SHUFFLE_REPEAT_ALL,
+    SHUFFLE_NOREPEAT, REPEAT_ONE (ignored — we only support repeat-all).
+    """
+    try:
+        mode = device.play_mode
+        return {
+            'shuffle': 'SHUFFLE' in mode,
+            'repeat': 'REPEAT' in mode,
+        }
+    except Exception as exc:
+        logger.warning('get_play_mode failed: %s', exc)
+        return None
+
+
+def set_play_mode(device, shuffle: bool, repeat: bool) -> None:
+    """Set play mode from separate shuffle/repeat booleans."""
+    if shuffle and repeat:
+        mode = 'SHUFFLE_REPEAT_ALL'
+    elif shuffle:
+        mode = 'SHUFFLE_NOREPEAT'
+    elif repeat:
+        mode = 'REPEAT_ALL'
+    else:
+        mode = 'NORMAL'
+    try:
+        device.play_mode = mode
+    except Exception as exc:
+        logger.warning('set_play_mode failed: %s', exc)
+
+
+# ------------------------------------------------------------------
 # Queue & Favourites
 # ------------------------------------------------------------------
 

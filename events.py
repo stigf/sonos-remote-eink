@@ -24,6 +24,8 @@ EVT_WIFI_AP_START  = 'wifi_ap_start'
 EVT_WIFI_AP_STOP   = 'wifi_ap_stop'
 EVT_WIFI_CONNECT   = 'wifi_connect'   # payload: (ssid, password)
 EVT_TOGGLE_ART     = 'toggle_art'    # toggle album art display on/off
+EVT_TOGGLE_SHUFFLE = 'toggle_shuffle'
+EVT_TOGGLE_REPEAT  = 'toggle_repeat'
 EVT_GROUP_TOGGLE   = 'group_toggle'  # payload: str (speaker IP) — join/unjoin
 
 

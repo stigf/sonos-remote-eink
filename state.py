@@ -57,6 +57,8 @@ class AppState:
     queue_position: int = 0           # 0-indexed
     album_art_img: Any = None         # PIL Image (mode 'L' greyscale) or None
     show_album_art: bool = False      # user setting: display album art
+    shuffle: bool = False             # Sonos shuffle state
+    repeat: bool = False              # Sonos repeat-all state
 
     # Lists
     queue: list = field(default_factory=list)        # list[QueueItem]

@@ -135,7 +135,7 @@ All tunable constants live in **`config.py`**.
 | `WIFI_HOTSPOT_SSID` | `SonosRemote-Setup` | Hotspot SSID for WiFi setup |
 | `WIFI_HOTSPOT_PASSWORD` | `sonossetup` | Hotspot password |
 | `WIFI_PORTAL_PORT` | `80` | Captive portal HTTP port |
-| `WIFI_SCAN_INTERVAL` | `15.0` s | Background scan interval on the WiFi tab |
+| `WIFI_SCAN_INTERVAL` | `15.0` s | Background scan interval on the Settings tab |
 
 ### Persistent settings
 
@@ -145,7 +145,7 @@ User preferences are stored in `/opt/sonos-remote/settings.json` and persist acr
 |---------|---------|-------------|
 | `show_album_art` | `false` | Display dithered album art on the Now Playing screen |
 
-Album art can be toggled from the WiFi tab via the **Art:ON / Art:OFF** button. The setting is saved immediately to disk.
+Album art can be toggled from the Settings tab via the **Art:ON / Art:OFF** button. The setting is saved immediately to disk.
 
 ### Touch coordinate calibration
 
@@ -171,7 +171,7 @@ The display is 250×122 px in landscape mode.
 │                                      │
 │                                      │  y=106
 ├─────────┬────────┬────────┬─────────┤
-│  Play   │ Queue  │ Spkrs  │  WiFi   │  y=106–122 (tab bar)
+│  Play   │ Queue  │ Spkrs  │  Setup  │  y=106–122 (tab bar)
 └─────────┴────────┴────────┴─────────┘  y=122
 ```
 
@@ -184,7 +184,7 @@ Song Title (bold, truncated)
 Artist Name
 Album Name (smaller)
 ████████░░░░░░  0:42 / 3:15        ← progress bar
-   [⏮]   [⏪]   [▶/⏸]   [⏩]   [⏭]   ← transport controls
+   [⏮]   [⏸/▶]   [⏭]   [−]   [+]   ← transport + volume controls
 VOL [████████░░░░░░░░░░] 72        ← shares slot with tab bar
 ```
 
@@ -195,7 +195,7 @@ Active mode (with album art):
 │ ART  │ Artist Name
 │48×48 │ Album Name (smaller)
 └──────┘ ████████░░░  0:42 / 3:15
-   [⏮]   [⏪]   [▶/⏸]   [⏩]   [⏭]
+   [⏮]   [⏸/▶]   [⏭]   [−]   [+]
 VOL [████████░░░░░░░░░░] 72
 ```
 
@@ -234,7 +234,7 @@ Tap a favourite to replace the queue and start playing it. Tap a queue item to j
 - Tap the **coordinator** row to switch the active speaker target
 - Tap a **non-coordinator** speaker to toggle its group membership (join/unjoin the coordinator's zone group)
 
-### Tab 3 — WiFi
+### Tab 3 — Settings
 
 Normal mode:
 
@@ -245,9 +245,9 @@ MyNetwork  192.168.1.42
 * MyNetwork          92% [+]
   Neighbor-5G        78% [+]
   CoffeeShop         45% [+]
-  OpenNetwork         20%
 ────────────────────────────────────
-[Scan]                  [Setup AP]
+[Art:OFF] [Shfl:OFF] [Rpt:OFF]
+[Scan]               [Setup AP]
 ```
 
 AP mode (captive portal active):
@@ -353,7 +353,12 @@ sonos-remote-eink/
 │   ├── tab_now_playing.py  # Now Playing tab (active + idle modes, album art)
 │   ├── tab_queue.py        # Queue / Favourites tab
 │   ├── tab_speakers.py     # Speaker selection & grouping tab
-│   └── tab_wifi.py         # WiFi settings / captive portal setup tab
+│   └── tab_wifi.py         # Settings tab (WiFi, art, shuffle, repeat)
+├── docs/                   # GitHub Pages website
+│   ├── index.html
+│   ├── style.css
+│   ├── favicon.svg
+│   └── img/                # Preview screenshots (4× scaled)
 ├── render_previews.py      # Generate preview PNGs of all UI states
 ├── run_portal.py           # Standalone captive portal runner (dev)
 ├── requirements.txt

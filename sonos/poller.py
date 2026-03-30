@@ -146,6 +146,21 @@ class SonosPoller:
 
         self._store.update(_update)
 
+        # Poll play mode (shuffle / repeat)
+        play_mode = client.get_play_mode(device)
+        if play_mode is not None:
+            def _update_play_mode(s):
+                nonlocal changed, track_changed
+                if s.shuffle != play_mode['shuffle']:
+                    s.shuffle = play_mode['shuffle']
+                    changed = True
+                    track_changed = True
+                if s.repeat != play_mode['repeat']:
+                    s.repeat = play_mode['repeat']
+                    changed = True
+                    track_changed = True
+            self._store.update(_update_play_mode)
+
         # Fetch album art if URI changed and setting is enabled
         snap = self._store.get_snapshot()
         art_uri = info.get('album_art_uri', '')

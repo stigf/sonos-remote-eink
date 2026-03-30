@@ -21,6 +21,7 @@ import settings
 from state import StateStore
 from hardware.display import DisplayDriver
 from hardware.touch import TouchDriver
+from sonos import client as sonos_client
 from sonos.poller import SonosPoller
 from ui.renderer import Renderer
 from ui import tab_now_playing, tab_queue, tab_speakers, tab_wifi, keyboard
@@ -100,6 +101,30 @@ def main():
         bus.publish(evt.EVT_STATE_CHANGED)
 
     bus.subscribe(evt.EVT_TOGGLE_ART, _on_toggle_art)
+
+    # ---- Shuffle toggle ----
+    def _on_toggle_shuffle(_payload):
+        snap = store.get_snapshot()
+        new_shuffle = not snap.shuffle
+        device = sonos_client.get_device_by_ip(snap.active_speaker_ip)
+        if device:
+            sonos_client.set_play_mode(device, new_shuffle, snap.repeat)
+        store.update(lambda s: setattr(s, 'shuffle', new_shuffle))
+        bus.publish(evt.EVT_STATE_CHANGED)
+
+    bus.subscribe(evt.EVT_TOGGLE_SHUFFLE, _on_toggle_shuffle)
+
+    # ---- Repeat toggle ----
+    def _on_toggle_repeat(_payload):
+        snap = store.get_snapshot()
+        new_repeat = not snap.repeat
+        device = sonos_client.get_device_by_ip(snap.active_speaker_ip)
+        if device:
+            sonos_client.set_play_mode(device, snap.shuffle, new_repeat)
+        store.update(lambda s: setattr(s, 'repeat', new_repeat))
+        bus.publish(evt.EVT_STATE_CHANGED)
+
+    bus.subscribe(evt.EVT_TOGGLE_REPEAT, _on_toggle_repeat)
 
     # ---- Touch handler ----
     _last_activity = [time.monotonic()]
@@ -291,6 +316,10 @@ def _hit_wifi(x: int, y: int, snap, bus, store) -> None:
             bus.publish(evt.EVT_WIFI_SCAN)
         elif key == 'toggle_art':
             bus.publish(evt.EVT_TOGGLE_ART)
+        elif key == 'toggle_shuffle':
+            bus.publish(evt.EVT_TOGGLE_SHUFFLE)
+        elif key == 'toggle_repeat':
+            bus.publish(evt.EVT_TOGGLE_REPEAT)
         elif key == 'wifi_ap_start':
             bus.publish(evt.EVT_WIFI_AP_START)
         elif key == 'wifi_ap_stop':
@@ -323,7 +352,7 @@ def _hit_wifi(x: int, y: int, snap, bus, store) -> None:
         elif key == 'wifi_scroll_down':
             store.update(lambda s: setattr(s, 'wifi_scroll',
                          min(s.wifi_scroll + 1,
-                             max(0, len(s.wifi_networks) - config.WIFI_VISIBLE_ROWS))))
+                             max(0, len(s.wifi_networks) - tab_wifi._VISIBLE_ROWS))))
             bus.publish(evt.EVT_STATE_CHANGED)
         return
 

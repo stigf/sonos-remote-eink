@@ -1,6 +1,8 @@
 # sonos-remote-eink
 
-A physical Sonos controller built with a Raspberry Pi and a Waveshare 2.13" Touch e-Paper HAT (or compatible, e.g. ABKN) — 250×122 px, black & white. Runs on any Raspberry Pi with WiFi (Zero 2W, Zero W, 3B/3B+, 4B, 5). Browse now-playing info, manage the queue, group speakers, and configure WiFi — all from a low-power, always-on e-ink touchscreen.
+A physical Sonos controller built with a Raspberry Pi and a 2.13" touch e-ink display. Control playback, browse the queue, group speakers, toggle shuffle and repeat, and configure WiFi — all from a low-power, always-on 250×122 px touchscreen.
+
+Runs on any Raspberry Pi with WiFi and a 40-pin GPIO header (Zero 2W, Zero W, 3B/3B+, 4B, 5).
 
 ---
 
@@ -8,11 +10,10 @@ A physical Sonos controller built with a Raspberry Pi and a Waveshare 2.13" Touc
 
 | Component | Details |
 |-----------|---------|
-| SBC | Any Raspberry Pi with WiFi and a 40-pin GPIO header — Zero 2W, Zero W, 3B/3B+, 4B, or 5 |
-| Display | Waveshare 2.13" Touch e-Paper HAT (or compatible) — 250×122 px, B/W, SPI (EPD) + I2C (GT1151 touch) |
-| Connection | 40-pin header (HAT form factor) |
+| SBC | Any Raspberry Pi with WiFi and a 40-pin GPIO header |
+| Display | Waveshare 2.13" Touch e-Paper HAT (or compatible, e.g. ABKN) — 250×122 px, B/W, SPI + I2C, HAT form factor |
 
-### Pin assignments (BCM, per Waveshare schematic)
+### Pin assignments (BCM)
 
 | Signal | GPIO |
 |--------|------|
@@ -27,8 +28,6 @@ A physical Sonos controller built with a Raspberry Pi and a Waveshare 2.13" Touc
 | I2C SDA | 2 |
 | I2C SCL | 3 |
 
----
-
 ## Recommended OS
 
 **Raspberry Pi OS Lite (64-bit), Bookworm** — the headless variant (no desktop).
@@ -38,8 +37,6 @@ A physical Sonos controller built with a Raspberry Pi and a Waveshare 2.13" Touc
 - Use the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) to flash the SD card. Under *Advanced Options*:
   - Set hostname, enable SSH, and pre-configure WiFi credentials.
 - A desktop environment is not required and should not be installed.
-
----
 
 ## Quick start
 
@@ -52,8 +49,6 @@ sudo reboot
 ```
 
 The service starts on boot and automatically discovers Sonos speakers on the local network.
-
----
 
 ## Manual installation (step by step)
 
@@ -164,125 +159,45 @@ If taps register in the wrong location (e.g. axes are swapped or inverted), adju
 
 ## UI layout
 
-The display is 250×122 px in landscape mode.
+The display is 250 x 122 px in landscape mode. The bottom 16 px are shared between the tab bar and the volume indicator — only one is shown at a time.
 
 ```
-┌──────────────────────────────────────┐
-│                                      │  Content area
-│        Content area (250×106)        │  y=0 to y=106
-│                                      │
-├──────────────────────────────────────┤
-│   Play     Queue     Spkrs    Setup  │  Tab bar
-└──────────────────────────────────────┘  y=106 to y=122
++--------------------------------------+
+|                                      |  Content area
+|          Content area                |  250 x 106 px
+|                                      |
++--------------------------------------+
+|   Play     Queue     Spkrs    Setup  |  Tab bar (16 px)
++--------------------------------------+
 ```
+
+A menu icon in the top-right corner of the Now Playing tab opens the tab bar. Tap the Play tab to hide it and show the volume bar instead.
 
 ### Tab 0 — Now Playing
 
-Active mode (no album art):
+Displays track title, artist, album, a progress bar, and transport controls (prev / play-pause / next / vol down / vol up). When album art is enabled, a 48 x 48 dithered thumbnail appears alongside the track info.
 
-```
-Song Title (bold, truncated)
-Artist Name
-Album Name (smaller)
-████████░░░░░░  0:42 / 3:15        ← progress bar
-   [⏮]   [⏸/▶]   [⏭]   [−]   [+]   ← transport + volume controls
-VOL [████████░░░░░░░░░░] 72        ← shares slot with tab bar
-```
-
-Active mode (with album art):
-
-```
-┌──────┐ Song Title (bold, truncated)
-│ ART  │ Artist Name
-│48×48 │ Album Name (smaller)
-└──────┘ ████████░░░  0:42 / 3:15
-   [⏮]   [⏸/▶]   [⏭]   [−]   [+]
-VOL [████████░░░░░░░░░░] 72
-```
-
-Idle mode shows a simplified display — no controls, no menu icon. With album art enabled, a larger 96×96 art image is shown on the left with track info beside it. Without art, track info is centred on screen.
-
-A subtle menu icon (⋮) in the top-right corner opens the tab bar. The tab bar and volume bar share the same 16px slot at the bottom — only one is shown at a time.
+Idle mode shows a simplified display with no controls and no menu icon. With album art enabled, a larger 96 x 96 image is shown on the left with track info beside it. Without art, track info is centred.
 
 ### Tab 1 — Queue
 
-```
-| Favs (95px)   | Queue (154px)         |
-|───────────────|───────────────────────|
-| Radio 1       | > 3. Current Song     |  ← each row 15px
-| My Playlist   |   4. Next Song        |
-| Jazz FM       |   5. Another One      |
-| ...           |   ...                 |
-```
-
-Tap a favourite to replace the queue and start playing it. Tap a queue item to jump to that position. When a list is longer than the visible area, ▲/▼ scroll buttons appear at the right edge.
+Favourites and queue are shown side by side. Tap a favourite to start playing it. Tap a queue item to jump to that track. When either list is longer than the visible area, scroll buttons appear at the right edge.
 
 ### Tab 2 — Speakers
 
-```
-■ Living Room   ████████░  42   ← coordinator (inverted row)
-● Kitchen       ██████░░░  35   ← grouped member
-○ Bedroom       ████░░░░░  20   ← ungrouped
-○ Office        ████████░  55   ← ungrouped
-```
+Lists all speakers on the network with grouping indicators and volume bars:
 
-**Indicators:**
 - **■** Coordinator — the active/master speaker controlling playback
 - **●** Grouped — member of the coordinator's zone group
 - **○** Ungrouped — standalone speaker
 
-**Touch actions:**
-- Tap the **coordinator** row to switch the active speaker target
-- Tap a **non-coordinator** speaker to toggle its group membership (join/unjoin the coordinator's zone group)
-
-When there are more than 4 speakers, ▲/▼ scroll buttons appear at the right edge.
+Tap the coordinator row to switch the active speaker. Tap a non-coordinator to toggle its group membership. When there are more than 4 speakers, scroll buttons appear at the right edge.
 
 ### Tab 3 — Settings
 
-Normal mode:
+Top rows show toggle buttons for album art, shuffle, and repeat. Below that is a list of WiFi networks with signal strength. Tap a secured network to open the on-screen keyboard and enter a password. Open networks connect immediately.
 
-```
-MyNetwork  192.168.1.42
-████░  72%
-────────────────────────────────────
-* MyNetwork          92% [+]
-  Neighbor-5G        78% [+]
-  CoffeeShop         45% [+]
-────────────────────────────────────
-[Art:OFF] [Shfl:OFF] [Rpt:OFF]
-[Scan]               [Setup AP]
-```
-
-AP mode (captive portal active):
-
-```
-Connect phone to WiFi:
-SonosRemote-Setup
-Password:
-sonossetup
-Then open in browser:
-http://10.42.0.1
-                          [Stop AP]
-```
-
-**How WiFi setup works:**
-
-**Primary: on-screen keyboard.** Tap a secured network in the list and a full-screen QWERTY keyboard appears. Type the password and tap OK. The keyboard has shift, symbols (numbers + punctuation), delete, and cancel. Each key is ~25×22 px — small but usable for a one-time password entry.
-
-```
-WiFi: MyNetwork
-[secretpass__|                    ]
-[q][w][e][r][t][y][u][i][o][p]
-  [a][s][d][f][g][h][j][k][l]
-[ABC][z][x][c][v][b][n][m][DEL]
-[?123][  SPACE  ][ CNCL ][  OK  ]
-```
-
-Open networks connect immediately on tap (no keyboard).
-
-**Fallback: captive portal.** Tap **Setup AP** and the device starts a WiFi hotspot (`SonosRemote-Setup`). Connect your phone to it, open `http://10.42.0.1`, and enter the password in a web form. The device then connects to the chosen network. If it fails, the hotspot restarts for retry.
-
-The hotspot SSID and password are configurable in `config.py`.
+**Fallback: captive portal.** Tap **Setup AP** to start a WiFi hotspot (`SonosRemote-Setup`). Connect a phone to it, open `http://10.42.0.1`, and enter credentials in a web form. The hotspot SSID and password are configurable in `config.py`.
 
 ---
 
@@ -295,16 +210,12 @@ After 60 seconds of inactivity the device enters **idle mode**. There is no hard
 | **Active** (user interacting) | Every Sonos poll (~2 s) — position, progress bar, volume |
 | **Idle** (no touch for 60 s) | Only on **track change**, playback state change, or volume change — position ticks are ignored |
 
-The display always reflects the currently playing track. When a song ends and the next begins, the screen refreshes with the new title, artist, and remaining time. Between refreshes the image is static.
+The display always reflects the currently playing track. When a song ends and the next begins, the screen refreshes with the new info. Any touch instantly exits idle mode with no wake delay and no swallowed tap.
 
-Any touch instantly exits idle mode — there is no wake delay and no swallowed tap. The display resumes live updates immediately.
-
-| Situation | Refresh type | Duration |
-|-----------|-------------|----------|
-| Tab switch | Full waveform | ~2 s (white flash) |
-| Now-playing update (active) | Fast waveform | ~0.3 s |
-| Track change (idle) | Fast waveform | ~0.3 s |
-| After 10 fast refreshes | Automatic full clear | ~2 s |
+| Refresh type | When | Duration |
+|-------------|------|----------|
+| Full waveform | Tab switch, every 10th refresh | ~2 s (white flash) |
+| Fast waveform | Now-playing updates, track changes | ~0.3 s |
 
 ---
 
@@ -335,42 +246,35 @@ Any touch instantly exits idle mode — there is no wake delay and no swallowed 
 ```
 sonos-remote-eink/
 ├── main.py                 # Entry point, event wiring, render loop
-├── config.py               # All hardware constants and layout dimensions
+├── config.py               # Hardware constants and layout dimensions
 ├── state.py                # AppState dataclass + thread-safe StateStore
-├── events.py               # Simple publish/subscribe EventBus
-├── settings.py             # Persistent JSON settings (album art toggle, etc.)
+├── events.py               # Publish/subscribe EventBus
+├── settings.py             # Persistent JSON settings
 ├── hardware/
-│   ├── display.py          # Waveshare EPD wrapper (full/fast/partial refresh)
+│   ├── display.py          # Waveshare EPD wrapper (full/fast refresh)
 │   └── touch.py            # GT1151 I2C touch driver
 ├── sonos/
 │   ├── client.py           # Stateless SoCo wrappers (incl. grouping)
-│   └── poller.py           # Background Sonos polling thread (incl. album art)
+│   └── poller.py           # Background polling thread (incl. album art)
 ├── wifi/
 │   ├── manager.py          # nmcli wrappers (scan, connect, hotspot)
-│   └── portal.py           # Captive portal HTTP server for password entry
+│   └── portal.py           # Captive portal HTTP server
 ├── ui/
-│   ├── fonts.py            # Font loading (loaded once at startup)
-│   ├── widgets.py          # Shared drawing primitives (truncation, etc.)
+│   ├── fonts.py            # Font loading
+│   ├── widgets.py          # Shared drawing primitives
 │   ├── renderer.py         # Render orchestrator (dirty-flag, hash dedup)
 │   ├── keyboard.py         # Full-screen on-screen QWERTY keyboard
-│   ├── tab_now_playing.py  # Now Playing tab (active + idle modes, album art)
+│   ├── tab_now_playing.py  # Now Playing tab (active + idle, album art)
 │   ├── tab_queue.py        # Queue / Favourites tab
-│   ├── tab_speakers.py     # Speaker selection & grouping tab
+│   ├── tab_speakers.py     # Speaker selection and grouping tab
 │   └── tab_wifi.py         # Settings tab (WiFi, art, shuffle, repeat)
 ├── docs/                   # GitHub Pages website
-│   ├── index.html
-│   ├── style.css
-│   ├── favicon.svg
-│   └── img/                # Preview screenshots (4× scaled)
 ├── render_previews.py      # Generate preview PNGs of all UI states
-├── run_portal.py           # Standalone captive portal runner (dev)
-├── requirements.txt
-├── install.sh
+├── install.sh              # One-step installer
 ├── sonos-remote.service    # systemd unit file
+├── requirements.txt
 └── LICENSE
 ```
-
----
 
 ## License
 

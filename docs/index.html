@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sonos e-ink Remote — Raspberry Pi touchscreen controller</title>
-<meta name="description" content="Open-source Sonos controller using a Raspberry Pi Zero 2W and a 2.13-inch touch e-ink display. Control playback, browse your queue, group speakers, and show album art — all from a low-power always-on screen.">
+<meta name="description" content="Open-source Sonos controller built with a Raspberry Pi and a 2.13-inch touch e-ink display. Control playback, browse your queue, group speakers, and show album art — all from a low-power always-on screen.">
 <meta name="keywords" content="Sonos, e-ink, e-paper, Raspberry Pi, Pi Zero, remote control, touchscreen, Waveshare, home automation, music controller, open source">
 <link rel="canonical" href="https://stigf.github.io/sonos-remote-eink/">
 <meta property="og:title" content="Sonos e-ink Remote">
-<meta property="og:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi Zero 2W and a 2.13-inch e-paper display.">
+<meta property="og:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi and a 2.13-inch e-paper display.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://stigf.github.io/sonos-remote-eink/">
 <meta property="og:image" content="https://stigf.github.io/sonos-remote-eink/img/06_idle_with_art.png">
@@ -17,7 +17,7 @@
 <meta property="og:image:alt" content="E-ink display showing album art and track info for a Sonos speaker">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sonos e-ink Remote">
-<meta name="twitter:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi Zero 2W.">
+<meta name="twitter:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi.">
 <meta name="twitter:image" content="https://stigf.github.io/sonos-remote-eink/img/06_idle_with_art.png">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
@@ -26,7 +26,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   "name": "Sonos e-ink Remote",
-  "description": "An open-source Sonos controller using a Raspberry Pi Zero 2W and a 2.13-inch touch e-ink display.",
+  "description": "An open-source Sonos controller built with a Raspberry Pi and a 2.13-inch touch e-ink display.",
   "url": "https://stigf.github.io/sonos-remote-eink/",
   "codeRepository": "https://github.com/stigf/sonos-remote-eink",
   "programmingLanguage": "Python",
@@ -44,9 +44,9 @@
 
   <header>
     <h1>Sonos e-ink Remote</h1>
-    <p class="hero-desc">An always-on touchscreen controller for Sonos, built with a Raspberry Pi Zero 2W and a 2.13" e-ink display.</p>
+    <p class="hero-desc">A low-power, always-on Sonos controller. Built with a Raspberry Pi Zero 2W and a 2.13" touch e-ink display (250×122 px) — compatible with any Raspberry Pi with WiFi and a 40-pin GPIO header.</p>
     <div class="badges">
-      <span class="badge">Pi Zero 2W</span>
+      <span class="badge">Raspberry Pi</span>
       <span class="badge">250 &times; 122 px</span>
       <span class="badge">e-ink touch</span>
       <span class="badge">Python</span>
@@ -136,7 +136,7 @@
     <table class="hw-table" aria-label="Required hardware">
       <thead><tr><th scope="col">Component</th><th scope="col">Details</th></tr></thead>
       <tbody>
-        <tr><td>SBC</td><td>Raspberry Pi Zero 2W, Zero W, 3B/3B+, 4B, or 5 &mdash; any model with a 40-pin GPIO header</td></tr>
+        <tr><td>SBC</td><td>Any Raspberry Pi with WiFi and a 40-pin GPIO header &mdash; Zero 2W, Zero W, 3B/3B+, 4B, or 5</td></tr>
         <tr><td>Display</td><td>2.13" Touch e-Paper HAT (Waveshare or compatible) &mdash; 250&times;122 px, B/W</td></tr>
         <tr><td>Interface</td><td>SPI (EPD) + I2C (GT1151 touch) via 40-pin header</td></tr>
         <tr><td>Connection</td><td>HAT form factor &mdash; plugs directly onto the GPIO header</td></tr>

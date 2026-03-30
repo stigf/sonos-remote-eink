@@ -1,6 +1,6 @@
 # sonos-remote-eink
 
-A physical Sonos controller built around a Raspberry Pi Zero 2W and a Waveshare 2.13" Touch e-Paper HAT (or compatible, e.g. ABKN) — 250×122 px, black & white. Browse now-playing info, manage the queue, group speakers, and configure WiFi — all from a low-power, always-on e-ink touchscreen.
+A physical Sonos controller built with a Raspberry Pi and a Waveshare 2.13" Touch e-Paper HAT (or compatible, e.g. ABKN) — 250×122 px, black & white. Runs on any Raspberry Pi with WiFi (Zero 2W, Zero W, 3B/3B+, 4B, 5). Browse now-playing info, manage the queue, group speakers, and configure WiFi — all from a low-power, always-on e-ink touchscreen.
 
 ---
 
@@ -8,7 +8,7 @@ A physical Sonos controller built around a Raspberry Pi Zero 2W and a Waveshare 
 
 | Component | Details |
 |-----------|---------|
-| SBC | Raspberry Pi Zero 2W, Zero W, 3B/3B+, 4B, or 5 — any model with a 40-pin GPIO header |
+| SBC | Any Raspberry Pi with WiFi and a 40-pin GPIO header — Zero 2W, Zero W, 3B/3B+, 4B, or 5 |
 | Display | Waveshare 2.13" Touch e-Paper HAT (or compatible) — 250×122 px, B/W, SPI (EPD) + I2C (GT1151 touch) |
 | Connection | 40-pin header (HAT form factor) |
 

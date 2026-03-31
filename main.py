@@ -363,7 +363,7 @@ def _hit_wifi(x: int, y: int, snap, bus, store) -> None:
         elif key == 'wifi_scroll_down':
             store.update(lambda s: setattr(s, 'wifi_scroll',
                          min(s.wifi_scroll + 1,
-                             max(0, len(s.wifi_networks) - tab_wifi.VISIBLE_ROWS))))
+                             max(0, len(s.wifi_networks) - tab_wifi.NET_VISIBLE))))
             bus.publish(evt.EVT_STATE_CHANGED)
         return
 

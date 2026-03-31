@@ -190,7 +190,7 @@ class SonosPoller:
             else:
                 url = f'http://{device.ip_address}:1400{art_uri}'
 
-            req = urllib.request.Request(url, headers={'User-Agent': 'SonosRemote/1.0'})
+            req = urllib.request.Request(url, headers={'User-Agent': 'EinkRemote/1.0'})
             with urllib.request.urlopen(req, timeout=5) as resp:
                 data = resp.read()
 

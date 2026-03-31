@@ -4,8 +4,8 @@
 # No tab bar is drawn while the keyboard is active.
 #
 # Layout (250×122):
-#   y= 0- 3  Label: "Password for: SSID"
-#   y= 4-23  Input field showing entered text + cursor
+#   y= 0-11  Label: "WiFi: SSID"
+#   y=12-23  Input field (inverted, showing entered text + cursor)
 #   y=24-45  Keyboard row 1 (10 keys, 22px tall)
 #   y=46-67  Keyboard row 2 (9 keys, offset, 22px tall)
 #   y=68-89  Keyboard row 3 (shift + 7 keys + del, 22px tall)
@@ -54,6 +54,7 @@ def render(snap) -> Image.Image:
     """Render the full-screen keyboard overlay. Returns 250×122 image."""
     img  = Image.new('1', (_W, _H), config.WHITE)
     draw = ImageDraw.Draw(img)
+    draw.fontmode = "1"
 
     ssid = snap.keyboard_target_ssid
     text = snap.keyboard_text
@@ -68,12 +69,12 @@ def render(snap) -> Image.Image:
     else:
         rows = _ALPHA_LOWER
 
-    # --- Label ---
-    label = widgets.truncate(f'WiFi: {ssid}', fonts.SMALL, _W - 4)
-    draw.text((2, _LABEL_Y + (_LABEL_H - widgets._text_h(fonts.SMALL)) // 2),
-              label, font=fonts.SMALL, fill=config.BLACK)
+    # --- Label (smaller font — secondary context) ---
+    label = widgets.truncate(f'WiFi: {ssid}', fonts.TINY, _W - 4)
+    draw.text((2, _LABEL_Y + (_LABEL_H - widgets._text_h(fonts.TINY)) // 2),
+              label, font=fonts.TINY, fill=config.BLACK)
 
-    # --- Input field ---
+    # --- Input field (inverted for visual separation from keys) ---
     _draw_input(draw, text)
 
     # --- Keyboard rows 1-3 ---
@@ -93,14 +94,14 @@ def render(snap) -> Image.Image:
 # ------------------------------------------------------------------
 
 def _draw_input(draw: ImageDraw, text: str) -> None:
-    x, y, w, h = 2, _INPUT_Y, _W - 4, _INPUT_H
+    x, y, w, h = 0, _INPUT_Y, _W, _INPUT_H
 
-    draw.rectangle([x, y, x + w - 1, y + h - 1],
-                   outline=config.BLACK, fill=config.WHITE)
+    # Inverted input field — visually distinct from the keyboard keys
+    draw.rectangle([x, y, x + w - 1, y + h - 1], fill=config.BLACK)
 
     # Show text with cursor
     display_text = text + '|'
-    max_chars_w = w - 6
+    max_chars_w = w - 8
 
     # If text overflows, show the rightmost portion
     font = fonts.BOLD
@@ -108,8 +109,8 @@ def _draw_input(draw: ImageDraw, text: str) -> None:
         display_text = display_text[1:]
 
     th = widgets._text_h(font)
-    draw.text((x + 3, y + (h - th) // 2), display_text,
-              font=font, fill=config.BLACK)
+    draw.text((x + 4, y + (h - th) // 2), display_text,
+              font=font, fill=config.WHITE)
 
 
 # ------------------------------------------------------------------

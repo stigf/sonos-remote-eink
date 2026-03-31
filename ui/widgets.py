@@ -252,12 +252,12 @@ def draw_icon_next(draw, cx, cy, size=10, fill=config.BLACK):
 
 def draw_icon_vol_down(draw, cx, cy, size=10, fill=config.BLACK):
     hw = max(3, size // 3)
-    hh = max(1, size // 6)
+    hh = max(2, size // 5)
     draw.rectangle([cx - hw, cy - hh, cx + hw, cy + hh], fill=fill)
 
 
 def draw_icon_vol_up(draw, cx, cy, size=10, fill=config.BLACK):
     hw = max(3, size // 3)
-    hh = max(1, size // 6)
+    hh = max(1, size // 8)
     draw.rectangle([cx - hw, cy - hh, cx + hw, cy + hh], fill=fill)
     draw.rectangle([cx - hh, cy - hw, cx + hh, cy + hw], fill=fill)

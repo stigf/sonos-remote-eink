@@ -3,164 +3,197 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sonos e-ink Remote — Raspberry Pi touchscreen controller</title>
-<meta name="description" content="Open-source Sonos controller built with a Raspberry Pi and a 2.13-inch touch e-ink display. Control playback, browse your queue, group speakers, and show album art — all from a low-power always-on screen.">
-<meta name="keywords" content="Sonos, e-ink, e-paper, Raspberry Pi, Pi Zero, remote control, touchscreen, Waveshare, home automation, music controller, open source">
+<title>sonos-remote-eink — A touch e-ink remote for Sonos on Raspberry Pi</title>
+<meta name="description" content="An unofficial touch e-ink remote for Sonos, built on Raspberry Pi. Touch UI rendered at 250x122 pixels on a 2.13-inch e-paper display.">
 <link rel="canonical" href="https://stigf.github.io/sonos-remote-eink/">
-<meta property="og:title" content="Sonos e-ink Remote">
-<meta property="og:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi and a 2.13-inch e-paper display.">
+<meta property="og:title" content="sonos-remote-eink — A touch e-ink remote for Sonos on Raspberry Pi">
+<meta property="og:description" content="An unofficial touch e-ink remote for Sonos, built on Raspberry Pi. Touch UI at 250x122 pixels on a 2.13-inch e-paper display.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://stigf.github.io/sonos-remote-eink/">
-<meta property="og:image" content="https://stigf.github.io/sonos-remote-eink/img/06_idle_with_art.png">
-<meta property="og:image:width" content="1000">
-<meta property="og:image:height" content="488">
-<meta property="og:image:alt" content="E-ink display showing album art and track info for a Sonos speaker">
+<meta property="og:image" content="https://stigf.github.io/sonos-remote-eink/img/idle_with_art.png">
+<meta property="og:image:width" content="250">
+<meta property="og:image:height" content="122">
+<meta property="og:image:alt" content="E-ink display showing album art and track info">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Sonos e-ink Remote">
-<meta name="twitter:description" content="An always-on Sonos controller with a touch e-ink screen. Built with a Raspberry Pi.">
-<meta name="twitter:image" content="https://stigf.github.io/sonos-remote-eink/img/06_idle_with_art.png">
+<meta name="twitter:title" content="sonos-remote-eink — A touch e-ink remote for Sonos on Raspberry Pi">
+<meta name="twitter:description" content="An unofficial touch e-ink remote for Sonos, built on Raspberry Pi. Touch UI at 250x122 pixels.">
+<meta name="twitter:image" content="https://stigf.github.io/sonos-remote-eink/img/idle_with_art.png">
+<meta name="twitter:image:alt" content="E-ink display showing album art and track info">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>/* Prevent flash */ (function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
-  "name": "Sonos e-ink Remote",
-  "description": "An open-source Sonos controller built with a Raspberry Pi and a 2.13-inch touch e-ink display.",
+  "name": "sonos-remote-eink",
+  "description": "An unofficial touch e-ink remote for Sonos, built on Raspberry Pi. Touch UI rendered at 250x122 pixels on a 2.13-inch e-paper display.",
   "url": "https://stigf.github.io/sonos-remote-eink/",
   "codeRepository": "https://github.com/stigf/sonos-remote-eink",
   "programmingLanguage": "Python",
-  "author": {
-    "@type": "Person",
-    "name": "stigf"
-  },
+  "author": { "@type": "Person", "name": "stigf" },
   "license": "https://polyformproject.org/licenses/noncommercial/1.0.0/"
 }
 </script>
 </head>
 <body>
 
-<div class="container">
+<a href="#main" class="skip-link">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+
+<button class="theme-toggle" aria-label="Switch to light theme">
+  <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<main id="main" class="page">
 
   <header>
-    <h1>Sonos e-ink Remote</h1>
-    <p class="hero-desc">A low-power, always-on Sonos controller. Built with a Raspberry Pi Zero 2W and a 2.13" touch e-ink display (250×122 px) — compatible with any Raspberry Pi with WiFi and a 40-pin GPIO header.</p>
-    <div class="badges">
-      <span class="badge">Raspberry Pi</span>
-      <span class="badge">250 &times; 122 px</span>
-      <span class="badge">e-ink touch</span>
-      <span class="badge">Python</span>
-    </div>
+    <p class="eyebrow">sonos-remote-eink</p>
+    <h1>A touch e&#8209;ink remote for Sonos on Raspberry&nbsp;Pi</h1>
+    <p class="lead">Touch interface rendered at 250&times;122&nbsp;pixels on a 2.13&Prime; e-paper display. Built with Python, PIL, and SoCo. Compatible with any Raspberry Pi with WiFi and a 40-pin GPIO header.</p>
+    <ul class="specs" aria-label="Key specifications">
+      <li>Raspberry Pi</li>
+      <li>250 &times; 122 px</li>
+      <li>e-ink touch</li>
+      <li>Python + SoCo</li>
+    </ul>
   </header>
 
-  <main>
-  <section>
-    <h2>Features</h2>
-    <div class="features">
-      <div class="feature">
-        <h3>Now Playing</h3>
-        <p>See what's playing with track info, progress bar, and transport controls. Optionally show dithered album art.</p>
+  <section id="features" aria-labelledby="features-heading" class="reveal">
+    <h2 id="features-heading">Features</h2>
+    <dl class="features">
+      <div>
+        <dt>Now Playing</dt>
+        <dd>Track info, progress bar, and transport controls. Optional dithered album art at 48&times;48 or 96&times;96&nbsp;px.</dd>
       </div>
-      <div class="feature">
-        <h3>Queue &amp; Favourites</h3>
-        <p>Browse your queue and Sonos favourites side by side. Tap to play.</p>
+      <div>
+        <dt>Queue &amp; Favourites</dt>
+        <dd>Browse side by side. Tap to play. Scrollable lists with on-screen arrows.</dd>
       </div>
-      <div class="feature">
-        <h3>Speaker Grouping</h3>
-        <p>View all speakers on your network. Tap to switch or group them together.</p>
+      <div>
+        <dt>Speaker Grouping</dt>
+        <dd>See every speaker on the network. Tap to switch zones or group them together.</dd>
       </div>
-      <div class="feature">
-        <h3>Settings</h3>
-        <p>Toggle shuffle, repeat, and album art. Connect to WiFi with the on-screen keyboard or captive portal.</p>
+      <div>
+        <dt>Shuffle, Repeat, Art</dt>
+        <dd>Toggle playback modes and album art from the More tab. WiFi setup built in.</dd>
       </div>
-      <div class="feature">
-        <h3>Always On</h3>
-        <p>The e-ink display holds its image with zero power. Only refreshes when something changes.</p>
+      <div>
+        <dt>E-ink Display</dt>
+        <dd>The screen holds its image between refreshes with no backlight needed. Updates only when something changes.</dd>
       </div>
-      <div class="feature">
-        <h3>Runs on Boot</h3>
-        <p>Install once, reboot, and it just works. Discovers your Sonos speakers automatically.</p>
+      <div>
+        <dt>Runs on Boot</dt>
+        <dd>One install script, one reboot. The service discovers Sonos speakers automatically.</dd>
       </div>
+    </dl>
+  </section>
+
+  <section id="screenshots" aria-labelledby="screenshots-heading" class="reveal">
+    <h2 id="screenshots-heading">Screenshots</h2>
+    <p class="note">Native resolution &mdash; pixel-for-pixel what the e-ink display shows.</p>
+    <figure class="hero-shot">
+      <div class="frame"><img src="img/idle_with_art.png" alt="Idle screen showing dithered album art at 96 by 96 pixels with track title, artist, and album name" width="250" height="122"></div>
+      <figcaption>Idle with album art</figcaption>
+    </figure>
+    <div class="shots">
+      <figure>
+        <div class="frame"><img src="img/active_with_art.png" alt="Now Playing screen with album art thumbnail, track info, progress bar, and transport controls for play, pause, skip, and volume" width="250" height="122" loading="lazy"></div>
+        <figcaption>Now Playing with art</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="img/active_no_art.png" alt="Now Playing screen without album art showing track title, artist, full-width progress bar, timestamp, and transport controls" width="250" height="122" loading="lazy"></div>
+        <figcaption>Now Playing without art</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="img/idle_no_art.png" alt="Idle screen without album art showing track title in large font, artist, album name, and total duration centred on screen" width="250" height="122" loading="lazy"></div>
+        <figcaption>Idle without art</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="img/queue.png" alt="Split-screen view with favourites list on the left and playback queue on the right, showing the currently playing track highlighted" width="250" height="122" loading="lazy"></div>
+        <figcaption>Queue &amp; Favourites</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="img/speakers.png" alt="Speaker list showing four speakers with volume bars, group indicators, and a scroll arrow for additional speakers" width="250" height="122" loading="lazy"></div>
+        <figcaption>Speakers</figcaption>
+      </figure>
+      <figure>
+        <div class="frame"><img src="img/more.png" alt="More tab showing toggle buttons for art, shuffle, and repeat at top, WiFi network list below with connected network inverted, and scan and hotspot buttons at bottom" width="250" height="122" loading="lazy"></div>
+        <figcaption>More</figcaption>
+      </figure>
     </div>
   </section>
 
-  <section>
-    <h2>Screenshots</h2>
-    <p class="screenshots-desc">Rendered at native 250&times;122 resolution &mdash; exactly what the e-ink display shows.</p>
-    <div class="preview-grid">
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/01_active_no_art.png" alt="Now Playing screen with track title, artist, progress bar and transport controls" width="250" height="122"></div>
-        <div class="preview-label">Now Playing</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/02_active_with_art.png" alt="Now Playing with dithered album art thumbnail beside track info" width="250" height="122"></div>
-        <div class="preview-label">Now Playing with album art</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/05_idle_no_art.png" alt="Idle mode with centred track info and no album art" width="250" height="122"></div>
-        <div class="preview-label">Idle mode</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/06_idle_with_art.png" alt="Idle mode with large dithered album art and track info" width="250" height="122"></div>
-        <div class="preview-label">Idle mode with album art</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/07_idle_busy_art.png" alt="Idle mode showing dithered busy album cover" width="250" height="122"></div>
-        <div class="preview-label">Idle mode with busy artwork</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/03_active_art_tab_bar.png" alt="Now Playing with album art and tab navigation at the bottom" width="250" height="122"></div>
-        <div class="preview-label">Tab navigation</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/10_queue.png" alt="Queue and favourites lists side by side" width="250" height="122"></div>
-        <div class="preview-label">Queue &amp; Favourites</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/11b_speakers_scroll.png" alt="Speaker list with grouping indicators, volume bars, and scroll arrows" width="250" height="122"></div>
-        <div class="preview-label">Speaker grouping</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/12_settings_normal.png" alt="Settings tab with WiFi networks, art, shuffle, and repeat toggles" width="250" height="122"></div>
-        <div class="preview-label">Settings</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-img-wrap"><img src="img/16_keyboard_typing.png" alt="On-screen QWERTY keyboard with text input" width="250" height="122"></div>
-        <div class="preview-label">On-screen keyboard</div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>Hardware</h2>
-    <table class="hw-table" aria-label="Required hardware">
+  <section id="hardware" aria-labelledby="hardware-heading" class="reveal">
+    <h2 id="hardware-heading">Hardware</h2>
+    <table>
       <thead><tr><th scope="col">Component</th><th scope="col">Details</th></tr></thead>
       <tbody>
-        <tr><td>SBC</td><td>Any Raspberry Pi with WiFi and a 40-pin GPIO header &mdash; Zero 2W, Zero W, 3B/3B+, 4B, or 5</td></tr>
-        <tr><td>Display</td><td>2.13" Touch e-Paper HAT (Waveshare or compatible) &mdash; 250&times;122 px, B/W</td></tr>
+        <tr><td>SBC</td><td>Any Raspberry Pi with WiFi and a 40-pin GPIO header</td></tr>
+        <tr><td>Display</td><td>Waveshare 2.13&Prime; Touch e-Paper HAT (or compatible) &mdash; 250&times;122 px, B/W</td></tr>
         <tr><td>Interface</td><td>SPI (EPD) + I2C (GT1151 touch) via 40-pin header</td></tr>
-        <tr><td>Connection</td><td>HAT form factor &mdash; plugs directly onto the GPIO header</td></tr>
       </tbody>
     </table>
   </section>
 
-  <section>
-    <h2>Get started</h2>
+  <section id="get-started" aria-labelledby="get-started-heading" class="reveal">
+    <h2 id="get-started-heading">Get started</h2>
 <pre><code>git clone https://github.com/stigf/sonos-remote-eink.git
 cd sonos-remote-eink
 sudo bash install.sh
 sudo reboot</code></pre>
-    <p class="quickstart-note">The service starts on boot and finds your Sonos speakers automatically.</p>
-    <p class="quickstart-cta">
-      <a class="cta" href="https://github.com/stigf/sonos-remote-eink" target="_blank" rel="noopener">View on GitHub</a>
+    <p class="note">Starts on boot. Finds speakers automatically.</p>
+    <p class="cta-wrap">
+      <a class="cta" href="https://github.com/stigf/sonos-remote-eink" target="_blank" rel="noopener">View on GitHub &rarr;</a>
     </p>
   </section>
-  </main>
 
-  <footer>
-    <p>&copy; 2026 stigf &middot; <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/" target="_blank" rel="noopener">PolyForm Noncommercial 1.0.0</a></p>
-  </footer>
+</main>
 
-</div>
+<footer>
+  <p>&copy; 2026 stigf &middot; <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/" target="_blank" rel="noopener">PolyForm Noncommercial 1.0.0</a></p>
+  <p class="disclaimer">Not affiliated with or endorsed by Sonos, Inc. Sonos is a trademark of Sonos, Inc.</p>
+</footer>
+
+<script>
+// Scroll reveal
+const io = new IntersectionObserver(
+  entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }),
+  { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Theme toggle
+(function() {
+  const btn = document.querySelector('.theme-toggle');
+  const root = document.documentElement;
+
+  function isDark() {
+    const attr = root.getAttribute('data-theme');
+    if (attr) return attr === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  function updateLabel() {
+    btn.setAttribute('aria-label', isDark() ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+
+  updateLabel();
+
+  btn.addEventListener('click', function() {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateLabel();
+  });
+})();
+</script>
+
 </body>
 </html>

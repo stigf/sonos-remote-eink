@@ -1,10 +1,10 @@
 # ui/tab_speakers.py — Speaker selection & grouping tab
 #
-# Layout (content area 250×106):
+# Layout (250×122 canvas, tab bar overlaid at bottom):
 #   Each speaker row: 26px tall
-#   Row: [indicator] Name (truncated)   VOL: ████░  NN
+#   Row: [indicator] Name (truncated)   ████░  NN
 #
-#   4 rows visible (4×26 = 104px, leaving 2px at bottom)
+#   4 rows visible (4×26 = 104px).
 #   Active coordinator shown with inverted row.
 #   Scroll arrows appear at the right edge when >4 speakers.
 #
@@ -32,6 +32,7 @@ _VOL_W    = 50   # width of volume bar
 def render(snap: AppState) -> Image.Image:
     img  = Image.new('1', (config.DISPLAY_W, config.DISPLAY_H), config.WHITE)
     draw = ImageDraw.Draw(img)
+    draw.fontmode = "1"
 
     _draw_content(draw, snap)
     widgets.draw_tab_bar(draw, snap.active_tab)
@@ -78,16 +79,21 @@ def _draw_content(draw: ImageDraw, snap: AppState) -> None:
 
         fg = config.WHITE if is_coord else config.BLACK
 
-        # Group indicator
+        # Group indicator — small geometric shapes drawn manually
+        ind_cx = 8
+        ind_cy = y0 + _ROW_H // 2
         if is_coord:
-            bullet = '\u25a0'   # ■ filled square — coordinator
+            # 5×5 filled square — coordinator
+            draw.rectangle([ind_cx - 2, ind_cy - 2, ind_cx + 2, ind_cy + 2],
+                           fill=fg)
         elif sp.is_grouped:
-            bullet = '\u25cf'   # ● filled circle — grouped
+            # 5×5 filled circle — grouped
+            draw.ellipse([ind_cx - 2, ind_cy - 2, ind_cx + 2, ind_cy + 2],
+                         fill=fg)
         else:
-            bullet = '\u25cb'   # ○ empty circle — ungrouped
-
-        draw.text((3, y0 + (_ROW_H - widgets._text_h(fonts.BOLD)) // 2),
-                  bullet, font=fonts.BOLD, fill=fg)
+            # 5×5 open circle — ungrouped
+            draw.ellipse([ind_cx - 2, ind_cy - 2, ind_cx + 2, ind_cy + 2],
+                         outline=fg)
 
         # Volume bar + number — position relative to row_w
         num_w  = 20                          # space reserved for volume number
@@ -95,9 +101,10 @@ def _draw_content(draw: ImageDraw, snap: AppState) -> None:
         num_x  = row_w - num_w               # number starts here
 
         # Speaker name (truncate to fit before volume bar)
-        name_max = vol_x - 16
+        name_x = 15
+        name_max = vol_x - name_x - 2
         name = widgets.truncate(sp.name, fonts.REGULAR, name_max)
-        draw.text((16, y0 + (_ROW_H - widgets._text_h(fonts.REGULAR)) // 2),
+        draw.text((name_x, y0 + (_ROW_H - widgets._text_h(fonts.REGULAR)) // 2),
                   name, font=fonts.REGULAR, fill=fg)
 
         bar_fill  = config.WHITE if is_coord else config.BLACK

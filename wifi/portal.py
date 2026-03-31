@@ -32,7 +32,7 @@ _PAGE_TEMPLATE = """\
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sonos Remote - WiFi Setup</title>
+<title>WiFi Setup</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
 body{{font-family:-apple-system,sans-serif;max-width:420px;margin:0 auto;padding:16px;background:#fff;color:#000}}

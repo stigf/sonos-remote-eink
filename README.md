@@ -127,10 +127,10 @@ All tunable constants live in **`config.py`**.
 | `IDLE_TIMEOUT_SEC` | `60` s | Inactivity timeout before entering idle mode |
 | `FULL_REFRESH_EVERY` | `10` | Fast refreshes between full e-ink clears |
 | `TOUCH_DEBOUNCE_SEC` | `0.25` s | Minimum interval between touch events |
-| `WIFI_HOTSPOT_SSID` | `SonosRemote-Setup` | Hotspot SSID for WiFi setup |
-| `WIFI_HOTSPOT_PASSWORD` | `sonossetup` | Hotspot password |
+| `WIFI_HOTSPOT_SSID` | `EinkRemote-Setup` | Hotspot SSID for WiFi setup |
+| `WIFI_HOTSPOT_PASSWORD` | `einksetup` | Hotspot password |
 | `WIFI_PORTAL_PORT` | `80` | Captive portal HTTP port |
-| `WIFI_SCAN_INTERVAL` | `15.0` s | Background scan interval on the Settings tab |
+| `WIFI_SCAN_INTERVAL` | `15.0` s | Background scan interval on the More tab |
 
 ### Persistent settings
 
@@ -140,9 +140,9 @@ User preferences are stored in `/opt/sonos-remote/settings.json` and persist acr
 |---------|---------|-------------|
 | `show_album_art` | `false` | Display dithered album art on the Now Playing screen |
 
-Album art can be toggled from the Settings tab via the **Art:ON / Art:OFF** button. The setting is saved immediately to disk.
+Album art can be toggled from the More tab via the **Art** button. The setting is saved immediately to disk.
 
-Shuffle and repeat are also toggled from the Settings tab (**Shfl:ON/OFF**, **Rpt:ON/OFF**). These control the Sonos play mode directly and are not persisted locally — they are read from the speaker on each poll.
+Shuffle and repeat are also toggled from the More tab (**Shuffle**, **Repeat**). These control the Sonos play mode directly and are not persisted locally — they are read from the speaker on each poll.
 
 ### Touch coordinate calibration
 
@@ -164,43 +164,45 @@ The display is 250 x 122 px in landscape mode.
 ```
 ┌──────────────────────────────────────┐
 │                                      │
-│        Content area (250x106)        │
+│          Full canvas (250×122)       │
 │                                      │
 ├──────────────────────────────────────┤
-│   Play     Queue     Spkrs    Setup  │
+│   Play     Queue     Spkrs     More   │  ← tab bar overlaid on bottom 16 px
 └──────────────────────────────────────┘
 ```
 
-The bottom 16 px are shared between the tab bar and the volume indicator — only one is shown at a time. A menu icon in the top-right corner of the Now Playing tab opens the tab bar. Tap the Play tab to hide it and show the volume bar instead.
+Content always renders at the full 250×122. The tab bar draws on top of the bottom 16 px. On the Now Playing tab the tab bar is hidden by default — a menu icon (⋮) in the top-right opens it; the volume bar occupies that space instead. Tap the Play tab to hide the tab bar and show volume again.
 
 ### Tab 0 — Now Playing
 
 ```
 Title (bold, truncated)          ⋮
 Artist
-Album (smaller font)
-██████████░░░░░░░░░░░░░░░░░░░░░░░
-1:18 / 2:10                  0:52
- [|◄]  [||]  [►|]  [ - ]  [ + ]
-VOL ████████████░░░░░░░░░░░░░░ 42
+████████████░░░░░░░░░░░░░░░░░░░░░
+1:18 / 2:10
+  |◄    ||    ►|     −     +
+████████████████░░░░░░░░░░░░░░ 42
 ```
 
-Track info, progress bar, and transport controls. Last row shows volume when the tab bar is hidden. When album art is enabled, a 48x48 dithered thumbnail appears top-left, pushing track info to the right.
+Title, artist, full-width progress bar, timestamp, transport icons, and a volume bar at the bottom. When album art is enabled, a 48×48 dithered thumbnail appears top-left with text beside it; the progress bar is pushed below the art but still spans the full width. Long titles that would truncate at the large idle font automatically downsize to a smaller bold font to show more text.
 
-**Idle mode** shows a simplified layout — no controls, no menu icon. With art enabled, a larger 96x96 image is shown with track info beside it. Without art, track info is centred.
+**Idle mode** shows a simplified layout — no controls, no menu icon. With art enabled, a larger 96×96 image is shown with track info beside it. Without art, track info is centred using a large font.
 
 ### Tab 1 — Queue
 
 ```
-Favs (95px)     Queue (154px)
-────────────    ──────────────
-Radio 1         > 3. Current
-My Playlist       4. Next Song
-Jazz FM           5. Another
-...               ...
+Favs (115px)  │ Queue (134px)
+──────────────┼───────────────
+Madvillainy   │ The Illest Vi…
+Mm..Food      │ Accordion
+Operation: D… │ ▌All Caps
+Piñata        │ Meat Grinder
+Bandana       │ Bistro
+Discover Wee… │ Raid
+Lo-Fi Beats   │ America's Mo…
 ```
 
-Favourites and queue side by side. Tap a favourite to start playing it. Tap a queue item to jump to that track. When either list overflows, ▲/▼ scroll buttons appear at the right edge.
+Favourites and queue side by side, 7 rows visible. The current track is shown inverted (white on black). Tap a favourite to start playing it. Tap a queue item to jump to that track. When either list overflows, ▲/▼ scroll arrows appear at the right edge.
 
 ### Tab 2 — Speakers
 
@@ -215,22 +217,23 @@ Favourites and queue side by side. Tap a favourite to start playing it. Tap a qu
 - **●** Grouped — member of the coordinator's group
 - **○** Ungrouped — standalone speaker
 
-Tap the coordinator to switch active speaker. Tap a non-coordinator to toggle group membership. When there are more than 4 speakers, ▲/▼ scroll buttons appear at the right edge.
+Tap the coordinator to switch active speaker. Tap a non-coordinator to toggle group membership. When there are more than 4 speakers, ▲/▼ scroll arrows appear at the right edge.
 
-### Tab 3 — Settings
+### Tab 3 — More
 
 ```
-[Art:OFF] [Shfl:OFF] [Rpt:OFF]
-[Scan]               [Setup AP]
+[  Art  ] [Shuffle] [Repeat]
 ────────────────────────────────
-* HomeNetwork        92%
-  Neighbor-5G        78%
-  CoffeeShop         45%
+* HomeNetwork          78% [+]
+  Neighbor5G           45% [+]
+  CoffeeShop              30%
+  IoT-Network          62% [+]
+[  Scan  ]         [Hotspot]
 ```
 
-Toggle buttons for album art, shuffle, and repeat. Below that, a list of WiFi networks. Tap a secured network to open the on-screen keyboard and enter a password. Open networks connect immediately.
+Toggle buttons for album art, shuffle, and repeat at the top — inverted (white on black) when active. Network list below (4 rows visible, connected network inverted). Tap a secured network to open the on-screen keyboard and enter a password. Open networks connect immediately.
 
-**Fallback: captive portal.** Tap **Setup AP** to start a WiFi hotspot (`SonosRemote-Setup`). Connect a phone to it, open `http://10.42.0.1`, and enter credentials in a web form. The hotspot SSID and password are configurable in `config.py`.
+**Fallback: captive portal.** Tap **Hotspot** to start a WiFi access point (`EinkRemote-Setup`). Connect a phone to it, open `http://10.42.0.1`, and enter credentials in a web form. The hotspot SSID and password are configurable in `config.py`.
 
 ---
 
@@ -300,7 +303,7 @@ sonos-remote-eink/
 │   ├── tab_now_playing.py  # Now Playing tab (active + idle, album art)
 │   ├── tab_queue.py        # Queue / Favourites tab
 │   ├── tab_speakers.py     # Speaker selection and grouping tab
-│   └── tab_wifi.py         # Settings tab (WiFi, art, shuffle, repeat)
+│   └── tab_wifi.py         # More tab (WiFi, art, shuffle, repeat)
 ├── docs/                   # GitHub Pages website
 ├── render_previews.py      # Generate preview PNGs of all UI states
 ├── install.sh              # One-step installer

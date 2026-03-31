@@ -13,6 +13,9 @@ DISPLAY_NATIVE_SHORT = 122   # portrait x-axis
 WHITE = 255
 BLACK = 0
 
+# Consistent margin
+MARGIN = 3
+
 # --- GPIO pins (BCM numbering, per Waveshare Touch e-Paper HAT) ---
 EPD_RST_PIN  = 17
 EPD_DC_PIN   = 25
@@ -43,23 +46,23 @@ IDLE_TIMEOUT_SEC   = 60         # switch to idle mode (track-change-only updates
 FULL_REFRESH_EVERY = 10
 
 # --- Tabs ---
-TAB_NAMES  = ['Play', 'Queue', 'Spkrs', 'Setup']
+TAB_NAMES  = ['Play', 'Queue', 'Spkrs', 'More']
 TAB_COUNT  = len(TAB_NAMES)
 TAB_W      = DISPLAY_W // TAB_COUNT   # 62 px each (last tab gets remainder)
 
 # --- WiFi ---
 WIFI_SCAN_INTERVAL     = 15.0     # seconds between background scans
 WIFI_ROW_H             = 15       # height of each network row
-WIFI_HOTSPOT_SSID      = 'SonosRemote-Setup'
-WIFI_HOTSPOT_PASSWORD   = 'sonossetup'
+WIFI_HOTSPOT_SSID      = 'EinkRemote-Setup'
+WIFI_HOTSPOT_PASSWORD   = 'einksetup'
 WIFI_PORTAL_PORT       = 80       # captive portal HTTP port
 WIFI_PORTAL_IP         = '10.42.0.1'  # NM hotspot default IP
 
 # --- Queue tab layout ---
-FAV_PANE_W   = 95    # left pane: favourites
-QUEUE_PANE_W = DISPLAY_W - FAV_PANE_W - 1   # right pane: queue (154 px)
+FAV_PANE_W   = 115   # left pane: favourites (wider — album/playlist names are long)
+QUEUE_PANE_W = DISPLAY_W - FAV_PANE_W - 1   # right pane: queue (134 px)
 LIST_ROW_H   = 15    # height of each list row
-VISIBLE_ROWS = CONTENT_H // LIST_ROW_H       # ~7 rows
+VISIBLE_ROWS = CONTENT_H // LIST_ROW_H       # 7 rows
 
 # --- Album art ---
 ART_SIZE         = 48      # square album art in active mode
@@ -71,10 +74,9 @@ ART_GAP          = 4       # gap between art and text
 # --- Now Playing layout (within content area 250×106) ---
 NP_TITLE_Y    = 2
 NP_ARTIST_Y   = 18
-NP_ALBUM_Y    = 30
-NP_PROGRESS_Y = 42
-NP_PROGRESS_H = 4
-NP_CTRL_Y     = 68   # controls row top — pushed down for breathing room
+NP_PROGRESS_Y = 34   # directly below artist line
+NP_PROGRESS_H = 6
+NP_CTRL_Y     = 66   # controls row top — pulled up 2px (no button outlines)
 NP_CTRL_H     = 28   # controls row height
 NP_VOL_Y      = CONTENT_H   # volume sits at bottom — tab bar replaces it
 NP_VOL_H      = TAB_BAR_H   # same height as tab bar (16px)

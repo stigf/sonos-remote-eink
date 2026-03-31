@@ -28,7 +28,7 @@ def _download_art(url, path):
         return True
     try:
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        req = urllib.request.Request(url, headers={'User-Agent': 'SonosRemote/1.0'})
+        req = urllib.request.Request(url, headers={'User-Agent': 'EinkRemote/1.0'})
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = resp.read()
         with open(path, 'wb') as f:
@@ -156,55 +156,55 @@ def main():
 
     print('Now Playing — Active:')
 
-    # 1. Active, no art
+    # Active, no art
     snap = _base_snap()
-    _save(tab_now_playing.render(snap), '01_active_no_art', out_dir)
+    _save(tab_now_playing.render(snap), 'active_no_art', out_dir)
 
-    # 2. Active, with art (Madvillainy)
+    # Active, with art (Madvillainy)
     snap = _base_snap()
     snap.show_album_art = True
     snap.album_art_img = madvillainy_art
-    _save(tab_now_playing.render(snap), '02_active_with_art', out_dir)
+    _save(tab_now_playing.render(snap), 'active_with_art', out_dir)
 
-    # 3. Active, with tab bar (Fela Kuti — long title, busy art)
+    # Active, with tab bar (Fela Kuti — long title, busy art)
     snap = _fela_snap(zombie_art)
     snap.show_tab_bar = True
-    _save(tab_now_playing.render(snap), '03_active_art_tab_bar', out_dir)
+    _save(tab_now_playing.render(snap), 'active_art_tab_bar', out_dir)
 
-    # 4. Active, no art, with tab bar
+    # Active, no art, with tab bar
     snap = _base_snap()
     snap.show_tab_bar = True
-    _save(tab_now_playing.render(snap), '04_active_tab_bar', out_dir)
+    _save(tab_now_playing.render(snap), 'active_tab_bar', out_dir)
 
     print('\nNow Playing — Idle:')
 
-    # 5. Idle, no art (Fela Kuti — long title, no art shown)
+    # Idle, no art (Fela Kuti — long title, no art shown)
     snap = _fela_snap(zombie_art)
     snap.idle_mode = True
     snap.show_album_art = False
     snap.album_art_img = None
-    _save(tab_now_playing.render(snap), '05_idle_no_art', out_dir)
+    _save(tab_now_playing.render(snap), 'idle_no_art', out_dir)
 
-    # 6. Idle, with art (Madvillainy — simple cover)
+    # Idle, with art (Madvillainy — simple cover)
     snap = _base_snap()
     snap.idle_mode = True
     snap.show_album_art = True
     snap.album_art_img = madvillainy_art
-    _save(tab_now_playing.render(snap), '06_idle_with_art', out_dir)
+    _save(tab_now_playing.render(snap), 'idle_with_art', out_dir)
 
-    # 7. Idle, with art (Fela Kuti — busy cover, long title)
+    # Idle, with art (Fela Kuti — busy cover, long title)
     snap = _fela_snap(zombie_art)
     snap.idle_mode = True
-    _save(tab_now_playing.render(snap), '07_idle_busy_art', out_dir)
+    _save(tab_now_playing.render(snap), 'idle_busy_art', out_dir)
 
     print('\nNow Playing — Other states:')
 
-    # 8. Active, paused
+    # Active, paused
     snap = _base_snap()
     snap.playback_state = 'PAUSED_PLAYBACK'
-    _save(tab_now_playing.render(snap), '08_active_paused', out_dir)
+    _save(tab_now_playing.render(snap), 'active_paused', out_dir)
 
-    # 9. Nothing playing
+    # Nothing playing
     snap = _base_snap()
     snap.track_title = ''
     snap.track_artist = ''
@@ -213,21 +213,21 @@ def main():
     snap.duration_sec = 0
     snap.playback_state = 'STOPPED'
     snap.volume = 0
-    _save(tab_now_playing.render(snap), '09_nothing_playing', out_dir)
+    _save(tab_now_playing.render(snap), 'nothing_playing', out_dir)
 
     print('\nOther tabs:')
 
-    # 10. Queue
+    # Queue
     snap = _base_snap()
     snap.active_tab = 1
-    _save(tab_queue.render(snap), '10_queue', out_dir)
+    _save(tab_queue.render(snap), 'queue', out_dir)
 
-    # 11a. Speakers (4 — no scroll)
+    # Speakers (4 — no scroll)
     snap = _base_snap()
     snap.active_tab = 2
-    _save(tab_speakers.render(snap), '11a_speakers', out_dir)
+    _save(tab_speakers.render(snap), 'speakers', out_dir)
 
-    # 11b. Speakers (6 — with scroll arrows)
+    # Speakers (6 — with scroll arrows)
     snap = _base_snap()
     snap.active_tab = 2
     snap.speakers = [
@@ -238,64 +238,64 @@ def main():
         SpeakerInfo(uid='a5', name='Bathroom', ip='192.168.1.14', volume=30, is_coordinator=False, is_grouped=True),
         SpeakerInfo(uid='a6', name='Garage', ip='192.168.1.15', volume=10, is_coordinator=False, is_grouped=False),
     ]
-    _save(tab_speakers.render(snap), '11b_speakers_scroll', out_dir)
+    _save(tab_speakers.render(snap), 'speakers_scroll', out_dir)
 
-    # 12. Settings (all toggles off)
+    # More tab (all toggles off)
     snap = _base_snap()
     snap.active_tab = 3
-    _save(tab_wifi.render(snap), '12_settings_normal', out_dir)
+    _save(tab_wifi.render(snap), 'more_normal', out_dir)
 
-    # 13. Settings (art on, shuffle on)
+    # More tab (art on, shuffle on)
     snap = _base_snap()
     snap.active_tab = 3
     snap.show_album_art = True
     snap.shuffle = True
-    _save(tab_wifi.render(snap), '13_settings_toggles', out_dir)
+    _save(tab_wifi.render(snap), 'more_toggles', out_dir)
 
-    # 14. Settings (AP mode)
+    # More tab (AP mode)
     snap = _base_snap()
     snap.active_tab = 3
     snap.wifi_ap_mode = True
     snap.wifi_status = 'Hotspot active'
-    _save(tab_wifi.render(snap), '14_settings_ap_mode', out_dir)
+    _save(tab_wifi.render(snap), 'more_ap_mode', out_dir)
 
     print('\nKeyboard:')
 
-    # 15. Keyboard (empty)
+    # Keyboard (empty)
     snap = _base_snap()
     snap.keyboard_active = True
     snap.keyboard_target_ssid = 'HomeNetwork'
     snap.keyboard_text = ''
     snap.keyboard_shift = False
     snap.keyboard_symbols = False
-    _save(keyboard.render(snap), '15_keyboard_empty', out_dir)
+    _save(keyboard.render(snap), 'keyboard_empty', out_dir)
 
-    # 16. Keyboard (typing)
+    # Keyboard (typing)
     snap = _base_snap()
     snap.keyboard_active = True
     snap.keyboard_target_ssid = 'HomeNetwork'
     snap.keyboard_text = 'myP@ss'
     snap.keyboard_shift = False
     snap.keyboard_symbols = False
-    _save(keyboard.render(snap), '16_keyboard_typing', out_dir)
+    _save(keyboard.render(snap), 'keyboard_typing', out_dir)
 
-    # 17. Keyboard (shift)
+    # Keyboard (shift)
     snap = _base_snap()
     snap.keyboard_active = True
     snap.keyboard_target_ssid = 'HomeNetwork'
     snap.keyboard_text = 'myP@ss'
     snap.keyboard_shift = True
     snap.keyboard_symbols = False
-    _save(keyboard.render(snap), '17_keyboard_shift', out_dir)
+    _save(keyboard.render(snap), 'keyboard_shift', out_dir)
 
-    # 18. Keyboard (symbols)
+    # Keyboard (symbols)
     snap = _base_snap()
     snap.keyboard_active = True
     snap.keyboard_target_ssid = 'HomeNetwork'
     snap.keyboard_text = 'myP@ss'
     snap.keyboard_shift = False
     snap.keyboard_symbols = True
-    _save(keyboard.render(snap), '18_keyboard_symbols', out_dir)
+    _save(keyboard.render(snap), 'keyboard_symbols', out_dir)
 
     total = len([f for f in os.listdir(out_dir) if f.endswith('.png')])
     print(f'\nDone! {total} images in {out_dir}/')

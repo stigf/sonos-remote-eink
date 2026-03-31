@@ -1,12 +1,10 @@
 # ui/tab_queue.py — Queue tab: Favourites (left) | Queue (right)
 #
-# Layout (content area 250×106):
+# Layout (250×122 canvas, tab bar overlaid at bottom):
 #
-#   |← 95 px →|1px|← 154 px →|
-#   | Favourites   | Queue        |
-#   | ─────────────|──────────────|
-#   | fav item 1   | queue item 1 |  ← each row 15px tall → ~6 rows visible
-#   | fav item 2   | > item 2 ←current
+#   |← 115 px →|1px|← 134 px →|
+#   | fav item 1   | queue item 1 |  ← each row 15px tall, 7 rows visible
+#   | fav item 2   | ▌item 2      |  ← current track inverted
 #   | ...          | ...          |
 
 from PIL import Image, ImageDraw
@@ -26,6 +24,7 @@ _ROW_H   = config.LIST_ROW_H
 def render(snap: AppState) -> Image.Image:
     img  = Image.new('1', (config.DISPLAY_W, config.DISPLAY_H), config.WHITE)
     draw = ImageDraw.Draw(img)
+    draw.fontmode = "1"
 
     _draw_content(draw, snap)
     widgets.draw_tab_bar(draw, snap.active_tab)
@@ -39,11 +38,7 @@ def _draw_content(draw: ImageDraw, snap: AppState) -> None:
     divx = config.FAV_PANE_W
     draw.line([divx, 0, divx, config.CONTENT_H - 1], fill=config.BLACK)
 
-    _draw_header(draw, 'Favs', _FAV_X, config.FAV_PANE_W)
-    _draw_header(draw, 'Queue', _QUEUE_X, config.QUEUE_PANE_W)
-
-    header_h = _ROW_H
-    visible  = (config.CONTENT_H - header_h) // _ROW_H
+    visible = config.VISIBLE_ROWS
 
     # ---- Favourites ----
     favs = snap.favourites
@@ -54,7 +49,7 @@ def _draw_content(draw: ImageDraw, snap: AppState) -> None:
 
     for i in range(visible):
         idx = i + scroll_f
-        y = header_h + i * _ROW_H
+        y = i * _ROW_H
         if idx < len(favs):
             widgets.draw_list_row(
                 draw, _FAV_X, y, fav_text_w, _ROW_H,
@@ -70,21 +65,20 @@ def _draw_content(draw: ImageDraw, snap: AppState) -> None:
 
     for i in range(visible):
         idx = i + scroll_q
-        y = header_h + i * _ROW_H
+        y = i * _ROW_H
         if idx < len(queue):
             item = queue[idx]
             is_current = (item.index == cur_pos)
-            prefix = '>' if is_current else ' '
-            font   = fonts.BOLD if is_current else fonts.SMALL
+            font = fonts.BOLD if is_current else fonts.SMALL
             widgets.draw_list_row(
                 draw, _QUEUE_X, y, queue_text_w, _ROW_H,
-                item.title, font=font, prefix=prefix,
+                item.title, font=font,
                 inverted=is_current
             )
 
     # Scroll arrows
-    list_top = header_h
-    list_bottom = header_h + visible * _ROW_H
+    list_top = 0
+    list_bottom = visible * _ROW_H
 
     if fav_scrollable:
         widgets.draw_scroll_arrows(
@@ -99,20 +93,11 @@ def _draw_content(draw: ImageDraw, snap: AppState) -> None:
             can_down=(scroll_q + visible < len(queue)))
 
 
-def _draw_header(draw, label, x, w):
-    draw.rectangle([x, 0, x + w - 1, _ROW_H - 1], fill=config.BLACK)
-    tw = widgets._text_w(label, fonts.BOLD)
-    th = widgets._text_h(fonts.BOLD)
-    tx = x + (w - tw) // 2
-    ty = (_ROW_H - th) // 2
-    draw.text((tx, ty), label, font=fonts.BOLD, fill=config.WHITE)
-
 
 def _build_regions(snap: AppState) -> None:
     """Update REGIONS dict with hit rects for all visible rows."""
     REGIONS.clear()
-    header_h = _ROW_H
-    visible  = (config.CONTENT_H - header_h) // _ROW_H
+    visible = config.VISIBLE_ROWS
     scroll_f = max(0, min(snap.fav_scroll, max(0, len(snap.favourites) - visible)))
     scroll_q = max(0, min(snap.queue_scroll, max(0, len(snap.queue) - visible)))
 
@@ -124,7 +109,7 @@ def _build_regions(snap: AppState) -> None:
     queue_hit_r = config.DISPLAY_W - widgets.SCROLL_W if queue_scrollable else config.DISPLAY_W
 
     for i in range(visible):
-        y0 = header_h + i * _ROW_H
+        y0 = i * _ROW_H
         y1 = y0 + _ROW_H - 1
         fav_idx = i + scroll_f
         if fav_idx < len(snap.favourites):
@@ -134,8 +119,8 @@ def _build_regions(snap: AppState) -> None:
             REGIONS[f'queue_{q_idx}'] = (_QUEUE_X, y0, queue_hit_r - 1, y1)
 
     # Scroll arrow hit regions (non-overlapping with rows)
-    list_top = header_h
-    list_bottom = header_h + visible * _ROW_H
+    list_top = 0
+    list_bottom = visible * _ROW_H
 
     if fav_scrollable:
         up, down = widgets.scroll_hit_regions(

@@ -1,6 +1,6 @@
 # sonos-remote-eink
 
-A physical Sonos controller built with a Raspberry Pi and a 2.13" touch e-ink display. Control playback, browse the queue, group speakers, toggle shuffle and repeat, and configure WiFi — all from a low-power, always-on 250×122 px touchscreen.
+A touch e-ink remote for Sonos, built with a Raspberry Pi and a 2.13" e-paper display. Control playback, browse the queue, group speakers, toggle shuffle and repeat, and configure WiFi — all from a low-power, always-on 250×122 px touchscreen.
 
 Runs on any Raspberry Pi with WiFi and a 40-pin GPIO header (Zero 2W, Zero W, 3B/3B+, 4B, 5).
 
@@ -320,3 +320,7 @@ This project is licensed under the [PolyForm Noncommercial License 1.0.0](https:
 - **Commercial use** requires a separate license from the author.
 
 See [LICENSE](LICENSE) for the full terms.
+
+---
+
+This project is not affiliated with or endorsed by Sonos, Inc. Sonos is a trademark of Sonos, Inc.

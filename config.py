@@ -1,5 +1,7 @@
 # config.py — Hardware constants and layout dimensions
 
+import os
+
 # --- Display ---
 DISPLAY_W = 250         # landscape width (pixels)
 DISPLAY_H = 122         # landscape height (pixels)
@@ -29,8 +31,10 @@ TOUCH_I2C_BUS  = 1
 TOUCH_I2C_ADDR = 0x14
 
 # --- Waveshare library ---
-# Clone https://github.com/waveshareteam/Touch_e-Paper_HAT to this path
-WAVESHARE_LIB_PATH = '/home/pi/Touch_e-Paper_HAT/python/TP_lib'
+# Clone https://github.com/waveshareteam/Touch_e-Paper_HAT to this path.
+# Resolves to the home directory of the user running the service (set via
+# systemd User=). Override here if the library lives elsewhere.
+WAVESHARE_LIB_PATH = os.path.expanduser('~/Touch_e-Paper_HAT/python/TP_lib')
 
 # --- Polling intervals (seconds) ---
 SONOS_POLL_INTERVAL     = 2.0

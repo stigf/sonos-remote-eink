@@ -86,10 +86,10 @@ cd sonos-remote-eink
 ```bash
 git clone --depth=1 \
   https://github.com/waveshareteam/Touch_e-Paper_HAT.git \
-  /home/pi/Touch_e-Paper_HAT
+  ~/Touch_e-Paper_HAT
 ```
 
-The application expects the library at `/home/pi/Touch_e-Paper_HAT/python/TP_lib/`. If you place it elsewhere, update `WAVESHARE_LIB_PATH` in `config.py`. Make sure you clone the **Touch_e-Paper_HAT** repo — not the general e-Paper repo.
+The application resolves `WAVESHARE_LIB_PATH` to `~/Touch_e-Paper_HAT/python/TP_lib/` at runtime, using the home directory of the user running the systemd service. If you place the library elsewhere, update `WAVESHARE_LIB_PATH` in `config.py`. Make sure you clone the **Touch_e-Paper_HAT** repo — not the general e-Paper repo.
 
 ### 5. Install Python dependencies
 
@@ -101,10 +101,12 @@ sudo pip3 install --break-system-packages soco Pillow smbus2
 
 ```bash
 sudo cp -r . /opt/sonos-remote/
-sudo chown -R pi:pi /opt/sonos-remote/
+sudo chown -R "$USER:$USER" /opt/sonos-remote/
 ```
 
 ### 7. Install the systemd service
+
+Edit `/opt/sonos-remote/sonos-remote.service` and set `User=` and `Group=` to your username (the default is `pi`), then:
 
 ```bash
 sudo cp /opt/sonos-remote/sonos-remote.service /etc/systemd/system/
@@ -112,6 +114,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable sonos-remote
 sudo systemctl start sonos-remote
 ```
+
+> The `install.sh` script handles user detection automatically — these manual steps only apply if you're setting things up by hand.
 
 ---
 
@@ -121,7 +125,7 @@ All tunable constants live in **`config.py`**.
 
 | Constant | Default | Description |
 |----------|---------|-------------|
-| `WAVESHARE_LIB_PATH` | `/home/pi/Touch_e-Paper_HAT/python/TP_lib` | Path to Waveshare EPD + GT1151 drivers |
+| `WAVESHARE_LIB_PATH` | `~/Touch_e-Paper_HAT/python/TP_lib` | Path to Waveshare EPD + GT1151 drivers (resolved to the service user's home) |
 | `SONOS_POLL_INTERVAL` | `2.0` s | Track info polling interval |
 | `SONOS_FAV_POLL_INTERVAL` | `30.0` s | Favourites and speaker list polling interval |
 | `IDLE_TIMEOUT_SEC` | `60` s | Inactivity timeout before entering idle mode |
